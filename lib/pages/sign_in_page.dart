@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:learn_play_level_up_flutter/components/navbar.dart';
 import 'package:learn_play_level_up_flutter/components/ui/button.dart';
 import 'package:learn_play_level_up_flutter/components/ui/input.dart';
+import 'package:learn_play_level_up_flutter/theme/app_theme.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:learn_play_level_up_flutter/services/auth_service.dart';
 
 class SignInPage extends StatefulWidget {
-  const SignInPage({Key? key}) : super(key: key);
+  const SignInPage({super.key});
 
   @override
   State<SignInPage> createState() => _SignInPageState();
@@ -36,19 +41,36 @@ class _SignInPageState extends State<SignInPage> {
     });
     
     try {
-      // TODO: Implement actual authentication with AuthService
+      // Get the AuthService instance
+      final authService = Provider.of<AuthService>(context, listen: false);
       
-      // Simulate network delay
-      await Future.delayed(const Duration(seconds: 1));
+      // Call the sign in method
+      final success = await authService.signIn(
+        _emailController.text,
+        _passwordController.text,
+      );
       
-      // For demonstration, navigate to student dashboard
       if (!mounted) return;
       
-      Navigator.pushReplacementNamed(context, '/student/dashboard');
+      if (success) {
+        // Login successful, navigate to dashboard based on user role
+        if (authService.currentUser?.role == 'teacher') {
+          GoRouter.of(context).go('/teacher/dashboard');
+        } else {
+          GoRouter.of(context).go('/student/dashboard');
+        }
+      } else {
+        // Login failed, show the error message from auth service
+        setState(() {
+          _errorMessage = authService.error ?? 'Failed to sign in. Please check your credentials.';
+        });
+      }
     } catch (e) {
-      setState(() {
-        _errorMessage = 'Failed to sign in. Please check your credentials.';
-      });
+      if (mounted) {
+        setState(() {
+          _errorMessage = 'Sign in error: $e';
+        });
+      }
     } finally {
       if (mounted) {
         setState(() {
@@ -64,9 +86,10 @@ class _SignInPageState extends State<SignInPage> {
     final colorScheme = theme.colorScheme;
     final size = MediaQuery.of(context).size;
     final isSmallScreen = size.width < 768;
+    final isDarkMode = theme.brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: colorScheme.background,
+      backgroundColor: colorScheme.surface,
       body: Column(
         children: [
           const Navbar(isAuthenticated: false),
@@ -81,9 +104,18 @@ class _SignInPageState extends State<SignInPage> {
                   ),
                   padding: const EdgeInsets.all(32),
                   decoration: BoxDecoration(
-                    color: colorScheme.surface,
+                    gradient: isDarkMode 
+                      ? const LinearGradient(
+                          colors: [Color(0xFF362C60), Color(0xFF2D2A3A)],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        )
+                      : AppGradients.cardBackground,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: colorScheme.outline.withOpacity(0.1)),
+                    border: Border.all(
+                      color: colorScheme.outline.withOpacity(0.2),
+                      width: 2,
+                    ),
                     boxShadow: [
                       BoxShadow(
                         color: colorScheme.shadow.withOpacity(0.1),
@@ -96,40 +128,45 @@ class _SignInPageState extends State<SignInPage> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      // Header
+                      // Header with pixel art style
                       Center(
                         child: Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: colorScheme.primary.withOpacity(0.1),
-                            shape: BoxShape.circle,
+                            gradient: AppGradients.purpleToPink,
+                            borderRadius: BorderRadius.circular(16),
                           ),
-                          child: Icon(
-                            Icons.lock_outline,
-                            color: colorScheme.primary,
-                            size: 32,
+                          child: const Icon(
+                            Icons.gamepad,
+                            color: Colors.white,
+                            size: 40,
                           ),
                         ),
-                      ),
+                      ).animate()
+                       .fadeIn(duration: 600.ms)
+                       .scale(begin: const Offset(0.8, 0.8), end: const Offset(1.0, 1.0)),
                       const SizedBox(height: 24),
                       Text(
                         'Sign In',
                         style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
+                          fontFamily: 'PressStart2P',
+                          fontSize: 24,
                           color: colorScheme.onSurface,
                         ),
                         textAlign: TextAlign.center,
-                      ),
+                      ).animate()
+                       .fadeIn(duration: 600.ms, delay: 200.ms),
                       const SizedBox(height: 8),
                       Text(
                         'Enter your credentials to access your account',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontFamily: 'Inter',
+                          fontSize: 14,
                           color: colorScheme.onSurfaceVariant,
                         ),
                         textAlign: TextAlign.center,
-                      ),
+                      ).animate()
+                       .fadeIn(duration: 600.ms, delay: 400.ms),
                       const SizedBox(height: 32),
                       
                       // Form
@@ -153,7 +190,9 @@ class _SignInPageState extends State<SignInPage> {
                                 }
                                 return null;
                               },
-                            ),
+                            ).animate()
+                             .fadeIn(duration: 600.ms, delay: 600.ms)
+                             .slideY(begin: 0.2, end: 0),
                             const SizedBox(height: 24),
                             AppInput(
                               label: 'Password',
@@ -173,7 +212,9 @@ class _SignInPageState extends State<SignInPage> {
                                 }
                                 return null;
                               },
-                            ),
+                            ).animate()
+                             .fadeIn(duration: 600.ms, delay: 800.ms)
+                             .slideY(begin: 0.2, end: 0),
                             const SizedBox(height: 16),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.end,
@@ -185,6 +226,7 @@ class _SignInPageState extends State<SignInPage> {
                                   child: Text(
                                     'Forgot Password?',
                                     style: TextStyle(
+                                      fontFamily: 'PixelifySans',
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
                                       color: colorScheme.primary,
@@ -192,7 +234,8 @@ class _SignInPageState extends State<SignInPage> {
                                   ),
                                 ),
                               ],
-                            ),
+                            ).animate()
+                             .fadeIn(duration: 600.ms, delay: 1000.ms),
                             
                             // Error message
                             if (_errorMessage != null) ...[
@@ -202,6 +245,10 @@ class _SignInPageState extends State<SignInPage> {
                                 decoration: BoxDecoration(
                                   color: colorScheme.errorContainer,
                                   borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: colorScheme.error.withOpacity(0.3),
+                                    width: 1,
+                                  ),
                                 ),
                                 child: Row(
                                   children: [
@@ -215,6 +262,7 @@ class _SignInPageState extends State<SignInPage> {
                                       child: Text(
                                         _errorMessage!,
                                         style: TextStyle(
+                                          fontFamily: 'Inter',
                                           fontSize: 14,
                                           color: colorScheme.error,
                                         ),
@@ -228,11 +276,12 @@ class _SignInPageState extends State<SignInPage> {
                             const SizedBox(height: 32),
                             AppButton(
                               text: 'Sign In',
-                              variant: ButtonVariant.primary,
+                              variant: ButtonVariant.gradient,
                               isFullWidth: true,
                               isLoading: _isLoading,
                               onPressed: _handleSignIn,
-                            ),
+                            ).animate()
+                             .fadeIn(duration: 600.ms, delay: 1200.ms),
                           ],
                         ),
                       ),
@@ -244,18 +293,29 @@ class _SignInPageState extends State<SignInPage> {
                           Text(
                             'Don\'t have an account?',
                             style: TextStyle(
+                              fontFamily: 'Inter',
                               fontSize: 14,
                               color: colorScheme.onSurfaceVariant,
                             ),
                           ),
                           const SizedBox(width: 8),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.pushReplacementNamed(context, '/register');
+                          TextButton(
+                            onPressed: () {
+                              GoRouter.of(context).go('/register');
                             },
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              minimumSize: Size.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              backgroundColor: colorScheme.primaryContainer.withOpacity(0.1),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
                             child: Text(
                               'Register',
                               style: TextStyle(
+                                fontFamily: 'PixelifySans',
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
                                 color: colorScheme.primary,
@@ -263,7 +323,8 @@ class _SignInPageState extends State<SignInPage> {
                             ),
                           ),
                         ],
-                      ),
+                      ).animate()
+                       .fadeIn(duration: 600.ms, delay: 1400.ms),
                     ],
                   ),
                 ),

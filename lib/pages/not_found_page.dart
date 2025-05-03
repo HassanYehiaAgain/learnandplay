@@ -3,7 +3,7 @@ import 'package:learn_play_level_up_flutter/components/navbar.dart';
 import 'package:learn_play_level_up_flutter/components/ui/button.dart';
 
 class NotFoundPage extends StatelessWidget {
-  const NotFoundPage({Key? key}) : super(key: key);
+  const NotFoundPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class NotFoundPage extends StatelessWidget {
     final isSmallScreen = size.width < 768;
 
     return Scaffold(
-      backgroundColor: colorScheme.background,
+      backgroundColor: colorScheme.surface,
       body: Column(
         children: [
           const Navbar(isAuthenticated: false),
@@ -38,7 +38,7 @@ class NotFoundPage extends StatelessWidget {
                       style: TextStyle(
                         fontSize: isSmallScreen ? 24 : 32,
                         fontWeight: FontWeight.bold,
-                        color: colorScheme.onBackground,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: 16),

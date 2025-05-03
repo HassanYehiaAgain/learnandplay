@@ -1,8 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'user.g.dart';
-
-@JsonSerializable()
 class User {
   final String id;
   final String email;
@@ -28,11 +25,45 @@ class User {
     this.badges,
   });
 
-  // Create a factory constructor for creating a new User instance from JSON
-  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
+  // Manual implementation of fromJson
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      id: json['id'] as String,
+      email: json['email'] as String,
+      name: json['name'] as String,
+      avatar: json['avatar'] as String?,
+      role: json['role'] as String,
+      createdAt: json['createdAt'] is DateTime 
+          ? json['createdAt'] 
+          : DateTime.parse(json['createdAt'] as String),
+      enrolledGames: (json['enrolledGames'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      createdGames: (json['createdGames'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      stats: json['stats'] as Map<String, dynamic>?,
+      badges: (json['badges'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+    );
+  }
 
-  // Create a method for converting User instance to JSON
-  Map<String, dynamic> toJson() => _$UserToJson(this);
+  // Manual implementation of toJson
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'email': email,
+      'name': name,
+      'avatar': avatar,
+      'role': role,
+      'createdAt': createdAt.toIso8601String(),
+      'enrolledGames': enrolledGames,
+      'createdGames': createdGames,
+      'stats': stats,
+      'badges': badges,
+    };
+  }
 
   // Create a method for copying User instance with some changes
   User copyWith({

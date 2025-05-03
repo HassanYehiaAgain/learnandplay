@@ -25,7 +25,7 @@ class AppInput extends StatelessWidget {
   final bool autofocus;
 
   const AppInput({
-    Key? key,
+    super.key,
     this.label,
     this.placeholder,
     this.controller,
@@ -47,7 +47,7 @@ class AppInput extends StatelessWidget {
     this.textCapitalization = TextCapitalization.none,
     this.contentPadding,
     this.autofocus = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +82,7 @@ class AppInput extends StatelessWidget {
           focusNode: focusNode,
           textCapitalization: textCapitalization,
           autofocus: autofocus,
+          textDirection: TextDirection.ltr,
           style: TextStyle(
             color: disabled
                 ? colorScheme.onSurface.withOpacity(0.5)
@@ -97,8 +98,8 @@ class AppInput extends StatelessWidget {
             ),
             filled: true,
             fillColor: disabled
-                ? colorScheme.surfaceVariant.withOpacity(0.5)
-                : colorScheme.surfaceVariant.withOpacity(0.3),
+                ? colorScheme.surfaceContainerHighest.withOpacity(0.5)
+                : colorScheme.surfaceContainerHighest.withOpacity(0.3),
             errorText: errorText,
             helperText: helperText,
             helperStyle: TextStyle(

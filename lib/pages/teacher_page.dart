@@ -4,7 +4,7 @@ import 'package:learn_play_level_up_flutter/components/ui/button.dart';
 import 'package:learn_play_level_up_flutter/components/ui/card.dart';
 
 class TeacherPage extends StatefulWidget {
-  const TeacherPage({Key? key}) : super(key: key);
+  const TeacherPage({super.key});
 
   @override
   State<TeacherPage> createState() => _TeacherPageState();
@@ -14,10 +14,13 @@ class _TeacherPageState extends State<TeacherPage> with SingleTickerProviderStat
   late TabController _tabController;
   bool _isLoading = false;
   
+  // Resources quick access panel state
+  bool _isResourcesPanelExpanded = false;
+  
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
     
     // Fetch teacher data, created games, etc.
     _fetchTeacherData();
@@ -52,13 +55,14 @@ class _TeacherPageState extends State<TeacherPage> with SingleTickerProviderStat
     final isSmallScreen = size.width < 768;
 
     return Scaffold(
-      backgroundColor: colorScheme.background,
-      floatingActionButton: FloatingActionButton(
+      backgroundColor: colorScheme.surface,
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.pushNamed(context, '/teacher/games/create');
         },
         backgroundColor: colorScheme.primary,
-        child: Icon(Icons.add, color: colorScheme.onPrimary),
+        icon: Icon(Icons.add, color: colorScheme.onPrimary),
+        label: Text('Create Game', style: TextStyle(color: colorScheme.onPrimary)),
       ),
       body: Column(
         children: [
@@ -93,7 +97,7 @@ class _TeacherPageState extends State<TeacherPage> with SingleTickerProviderStat
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
-                      color: colorScheme.onBackground,
+                      color: colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -106,24 +110,45 @@ class _TeacherPageState extends State<TeacherPage> with SingleTickerProviderStat
                   ),
                 ],
               ),
-              AppButton(
-                text: 'Create New Game',
-                variant: ButtonVariant.primary,
-                leadingIcon: Icons.add,
-                onPressed: () {
-                  Navigator.pushNamed(context, '/teacher/games/create');
-                },
+              Row(
+                children: [
+                  AppButton(
+                    text: 'Quick Resources',
+                    variant: ButtonVariant.outline,
+                    leadingIcon: Icons.book,
+                    onPressed: () {
+                      setState(() {
+                        _isResourcesPanelExpanded = !_isResourcesPanelExpanded;
+                      });
+                    },
+                  ),
+                  const SizedBox(width: 12),
+                  AppButton(
+                    text: 'Create New Game',
+                    variant: ButtonVariant.primary,
+                    leadingIcon: Icons.add,
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/teacher/games/create');
+                    },
+                  ),
+                ],
               ),
             ],
           ),
           const SizedBox(height: 24),
           
+          // Quick Resources Panel (Collapsible)
+          if (_isResourcesPanelExpanded) _buildResourcesPanel(context),
+          if (_isResourcesPanelExpanded) const SizedBox(height: 24),
+          
           // Stats Overview Cards
           SizedBox(
             height: 120,
-            child: Row(
+            child: ListView(
+              scrollDirection: Axis.horizontal,
               children: [
-                Expanded(
+                SizedBox(
+                  width: 200,
                   child: _buildStatCard(
                     context,
                     'Games Created',
@@ -133,7 +158,8 @@ class _TeacherPageState extends State<TeacherPage> with SingleTickerProviderStat
                   ),
                 ),
                 const SizedBox(width: 16),
-                Expanded(
+                SizedBox(
+                  width: 200,
                   child: _buildStatCard(
                     context,
                     'Active Students',
@@ -143,13 +169,25 @@ class _TeacherPageState extends State<TeacherPage> with SingleTickerProviderStat
                   ),
                 ),
                 const SizedBox(width: 16),
-                Expanded(
+                SizedBox(
+                  width: 200,
                   child: _buildStatCard(
                     context,
                     'Total Plays',
                     '127',
                     Icons.bar_chart,
                     colorScheme.tertiary,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                SizedBox(
+                  width: 200,
+                  child: _buildStatCard(
+                    context,
+                    'Avg. Score',
+                    '78%',
+                    Icons.insert_chart,
+                    Colors.amber,
                   ),
                 ),
               ],
@@ -174,6 +212,7 @@ class _TeacherPageState extends State<TeacherPage> with SingleTickerProviderStat
                 Tab(text: 'My Games'),
                 Tab(text: 'Students'),
                 Tab(text: 'Analytics'),
+                Tab(text: 'Classes'),
               ],
             ),
           ),
@@ -187,6 +226,7 @@ class _TeacherPageState extends State<TeacherPage> with SingleTickerProviderStat
                 _buildMyGamesTab(context),
                 _buildStudentsTab(context),
                 _buildAnalyticsTab(context),
+                _buildClassesTab(context),
               ],
             ),
           ),
@@ -548,38 +588,621 @@ class _TeacherPageState extends State<TeacherPage> with SingleTickerProviderStat
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     
-    return Center(
+    return SingleChildScrollView(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            Icons.analytics_outlined,
-            size: 64,
-            color: colorScheme.onSurfaceVariant.withOpacity(0.5),
-          ),
-          const SizedBox(height: 16),
           Text(
-            'Analytics Dashboard',
+            'Performance Analytics',
             style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
               color: colorScheme.onSurface,
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            'Detailed analytics and reports coming soon...',
-            style: TextStyle(
-              fontSize: 14,
-              color: colorScheme.onSurfaceVariant,
+          const SizedBox(height: 16),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Student Performance Chart
+              Expanded(
+                flex: 2,
+                child: AppCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Student Progress Over Time',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: colorScheme.onSurface,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Container(
+                        height: 200,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: colorScheme.surfaceVariant.withOpacity(0.3),
+                        ),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.bar_chart,
+                                size: 48,
+                                color: colorScheme.primary.withOpacity(0.7),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Student performance chart',
+                                style: TextStyle(
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      AppButton(
+                        text: 'View Detailed Report',
+                        variant: ButtonVariant.outline,
+                        size: ButtonSize.small,
+                        leadingIcon: Icons.analytics,
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              // Top Performers
+              Expanded(
+                child: AppCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Top Performers',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: colorScheme.onSurface,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      for (var i = 0; i < 5; i++)
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: i == 0 
+                              ? colorScheme.tertiary.withOpacity(0.1)
+                              : colorScheme.surfaceVariant.withOpacity(0.3),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 32,
+                                height: 32,
+                                decoration: BoxDecoration(
+                                  color: i == 0 
+                                    ? colorScheme.tertiary.withOpacity(0.2)
+                                    : colorScheme.surfaceVariant,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    '${i + 1}',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: i == 0 
+                                        ? colorScheme.tertiary
+                                        : colorScheme.onSurfaceVariant,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Student ${i + 1}',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        color: colorScheme.onSurface,
+                                      ),
+                                    ),
+                                    Text(
+                                      '${95 - i * 3}% avg. score',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: colorScheme.onSurfaceVariant,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Icon(
+                                Icons.emoji_events,
+                                size: 16,
+                                color: i == 0 
+                                  ? colorScheme.tertiary
+                                  : colorScheme.onSurfaceVariant.withOpacity(0.5),
+                              ),
+                            ],
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // Game Performance
+          AppCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Game Performance',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: colorScheme.onSurface,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  height: 150,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: colorScheme.surfaceVariant.withOpacity(0.3),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      for (var i = 0; i < 4; i++)
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              width: 40,
+                              height: 80 + (i % 3) * 30.0,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4),
+                                color: [
+                                  colorScheme.primary,
+                                  colorScheme.secondary,
+                                  colorScheme.tertiary,
+                                  colorScheme.error,
+                                ][i].withOpacity(0.7),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Game ${i + 1}',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
+                        ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 24),
-          AppButton(
-            text: 'Generate Basic Report',
-            variant: ButtonVariant.outline,
-            leadingIcon: Icons.download,
-            onPressed: () {},
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildClassesTab(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
+    final classes = [
+      {
+        'name': 'Math 101',
+        'students': 18,
+        'grade': '5th Grade',
+        'games': 5,
+        'avgScore': 82,
+        'icon': Icons.calculate,
+        'color': colorScheme.primary,
+      },
+      {
+        'name': 'Science Introduction',
+        'students': 16,
+        'grade': '6th Grade',
+        'games': 3,
+        'avgScore': 75,
+        'icon': Icons.science,
+        'color': colorScheme.tertiary,
+      },
+      {
+        'name': 'Literature Basics',
+        'students': 14,
+        'grade': '4th Grade',
+        'games': 6,
+        'avgScore': 88,
+        'icon': Icons.menu_book,
+        'color': colorScheme.secondary,
+      },
+    ];
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Your Classes',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: colorScheme.onSurface,
+              ),
+            ),
+            AppButton(
+              text: 'Create New Class',
+              variant: ButtonVariant.outline,
+              size: ButtonSize.small,
+              leadingIcon: Icons.add,
+              onPressed: () {},
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Expanded(
+          child: GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+              childAspectRatio: 1.5,
+            ),
+            itemCount: classes.length + 1, // +1 for "Create New Class" card
+            itemBuilder: (context, index) {
+              // "Create New Class" card
+              if (index == classes.length) {
+                return AppCard(
+                  isHoverable: true,
+                  onTap: () {},
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: colorScheme.primary.withOpacity(0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.add,
+                            size: 32,
+                            color: colorScheme.primary,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Create New Class',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: colorScheme.primary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+              
+              final classData = classes[index];
+              
+              return AppCard(
+                isHoverable: true,
+                onTap: () {},
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: (classData['color'] as Color).withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(
+                            classData['icon'] as IconData,
+                            color: classData['color'] as Color,
+                            size: 24,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                classData['name'] as String,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: colorScheme.onSurface,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Text(
+                                classData['grade'] as String,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        PopupMenuButton(
+                          icon: Icon(
+                            Icons.more_vert,
+                            color: colorScheme.onSurfaceVariant,
+                          ),
+                          itemBuilder: (context) => [
+                            const PopupMenuItem(
+                              value: 'edit',
+                              child: Row(
+                                children: [
+                                  Icon(Icons.edit),
+                                  SizedBox(width: 8),
+                                  Text('Edit'),
+                                ],
+                              ),
+                            ),
+                            const PopupMenuItem(
+                              value: 'delete',
+                              child: Row(
+                                children: [
+                                  Icon(Icons.delete),
+                                  SizedBox(width: 8),
+                                  Text('Delete'),
+                                ],
+                              ),
+                            ),
+                          ],
+                          onSelected: (value) {},
+                        ),
+                      ],
+                    ),
+                    const Spacer(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _buildClassStat(
+                          context, 
+                          'Students', 
+                          classData['students'].toString(),
+                          Icons.people,
+                        ),
+                        _buildClassStat(
+                          context, 
+                          'Games', 
+                          classData['games'].toString(),
+                          Icons.games,
+                        ),
+                        _buildClassStat(
+                          context, 
+                          'Avg. Score', 
+                          '${classData['avgScore']}%',
+                          Icons.score,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: AppButton(
+                            text: 'View Class',
+                            variant: ButtonVariant.outline,
+                            size: ButtonSize.small,
+                            isFullWidth: true,
+                            leadingIcon: Icons.visibility,
+                            onPressed: () {},
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: AppButton(
+                            text: 'Assign Game',
+                            variant: ButtonVariant.primary,
+                            size: ButtonSize.small,
+                            isFullWidth: true,
+                            leadingIcon: Icons.assignment,
+                            onPressed: () {},
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+  
+  Widget _buildClassStat(BuildContext context, String label, String value, IconData icon) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
+    return Column(
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 14,
+              color: colorScheme.onSurfaceVariant,
+            ),
+            const SizedBox(width: 4),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: colorScheme.onSurface,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 12,
+            color: colorScheme.onSurfaceVariant,
+          ),
+        ),
+      ],
+    );
+  }
+  
+  Widget _buildResourcesPanel(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
+    final resources = [
+      {
+        'title': 'Lesson Planning Guide',
+        'description': 'Templates and tips for effective lesson planning',
+        'icon': Icons.description,
+        'color': colorScheme.primary,
+      },
+      {
+        'title': 'Game Creation Tutorial',
+        'description': 'Step by step guide to creating engaging educational games',
+        'icon': Icons.gamepad,
+        'color': colorScheme.secondary,
+      },
+      {
+        'title': 'Student Assessment Tools',
+        'description': 'Methods for tracking and evaluating student progress',
+        'icon': Icons.assessment,
+        'color': colorScheme.tertiary,
+      },
+      {
+        'title': 'Classroom Management',
+        'description': 'Strategies for effective classroom organization',
+        'icon': Icons.people,
+        'color': Colors.amber,
+      },
+    ];
+    
+    return AppCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Teaching Resources',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: colorScheme.onSurface,
+                ),
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.close,
+                  color: colorScheme.onSurfaceVariant,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isResourcesPanelExpanded = false;
+                  });
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 16,
+              childAspectRatio: 1.0,
+            ),
+            itemCount: resources.length,
+            itemBuilder: (context, index) {
+              final resource = resources[index];
+              
+              return AppCard(
+                isHoverable: true,
+                onTap: () {},
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: (resource['color'] as Color).withOpacity(0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        resource['icon'] as IconData,
+                        color: resource['color'] as Color,
+                        size: 28,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      resource['title'] as String,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: colorScheme.onSurface,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 4),
+                    Flexible(
+                      child: Text(
+                        resource['description'] as String,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ],
       ),

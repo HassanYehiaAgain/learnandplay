@@ -5,7 +5,7 @@ import 'package:learn_play_level_up_flutter/components/ui/card.dart';
 import 'package:learn_play_level_up_flutter/components/ui/input.dart';
 
 class CreateGamePage extends StatefulWidget {
-  const CreateGamePage({Key? key}) : super(key: key);
+  const CreateGamePage({super.key});
 
   @override
   State<CreateGamePage> createState() => _CreateGamePageState();
@@ -22,16 +22,122 @@ class _CreateGamePageState extends State<CreateGamePage> {
   String _selectedCategory = 'Mathematics';
   int _selectedDifficulty = 3;
   int _estimatedTime = 10;
-  List<Map<String, dynamic>> _questions = [];
+  final List<Map<String, dynamic>> _questions = [];
   
-  bool _isLoading = false;
+  final bool _isLoading = false;
   bool _isSaving = false;
+  
+  // Added state variables for template selection
+  bool _showTemplateSelection = true;
+  String? _selectedTemplate;
+  
+  // Game templates
+  final List<Map<String, dynamic>> _gameTemplates = [
+    {
+      'id': 'math_quiz',
+      'name': 'Math Quiz',
+      'description': 'A quiz focused on basic math operations',
+      'icon': Icons.calculate,
+      'color': Colors.blue,
+      'category': 'Mathematics',
+      'sampleQuestions': [
+        {
+          'text': 'What is 7 × 8?',
+          'options': [
+            {'text': '54', 'isCorrect': false},
+            {'text': '56', 'isCorrect': true},
+            {'text': '58', 'isCorrect': false},
+            {'text': '63', 'isCorrect': false},
+          ],
+          'points': 10,
+        },
+        {
+          'text': 'What is 25 + 18?',
+          'options': [
+            {'text': '33', 'isCorrect': false},
+            {'text': '43', 'isCorrect': true},
+            {'text': '45', 'isCorrect': false},
+            {'text': '53', 'isCorrect': false},
+          ],
+          'points': 10,
+        },
+      ],
+    },
+    {
+      'id': 'vocab_quiz',
+      'name': 'Vocabulary Quiz',
+      'description': 'Test knowledge of word meanings and definitions',
+      'icon': Icons.menu_book,
+      'color': Colors.green,
+      'category': 'Language Arts',
+      'sampleQuestions': [
+        {
+          'text': 'What does "benevolent" mean?',
+          'options': [
+            {'text': 'Harmful', 'isCorrect': false},
+            {'text': 'Well-intentioned', 'isCorrect': true},
+            {'text': 'Cautious', 'isCorrect': false},
+            {'text': 'Hasty', 'isCorrect': false},
+          ],
+          'points': 15,
+        },
+        {
+          'text': 'Which word is a synonym for "diligent"?',
+          'options': [
+            {'text': 'Lazy', 'isCorrect': false},
+            {'text': 'Careless', 'isCorrect': false},
+            {'text': 'Hardworking', 'isCorrect': true},
+            {'text': 'Foolish', 'isCorrect': false},
+          ],
+          'points': 15,
+        },
+      ],
+    },
+    {
+      'id': 'science_quiz',
+      'name': 'Science Facts',
+      'description': 'Test knowledge of scientific facts and concepts',
+      'icon': Icons.science,
+      'color': Colors.purple,
+      'category': 'Science',
+      'sampleQuestions': [
+        {
+          'text': 'What is the closest planet to the Sun?',
+          'options': [
+            {'text': 'Venus', 'isCorrect': false},
+            {'text': 'Earth', 'isCorrect': false},
+            {'text': 'Mercury', 'isCorrect': true},
+            {'text': 'Mars', 'isCorrect': false},
+          ],
+          'points': 10,
+        },
+        {
+          'text': 'What is the chemical symbol for water?',
+          'options': [
+            {'text': 'WA', 'isCorrect': false},
+            {'text': 'H2O', 'isCorrect': true},
+            {'text': 'W', 'isCorrect': false},
+            {'text': 'HO', 'isCorrect': false},
+          ],
+          'points': 10,
+        },
+      ],
+    },
+    {
+      'id': 'custom',
+      'name': 'Custom Template',
+      'description': 'Start from scratch and create your own game',
+      'icon': Icons.create,
+      'color': Colors.orange,
+      'category': 'Other',
+      'sampleQuestions': [],
+    },
+  ];
   
   @override
   void initState() {
     super.initState();
-    // Add an empty question to start with
-    _addNewQuestion();
+    // Template selection screen will be shown first
   }
   
   @override
@@ -39,6 +145,46 @@ class _CreateGamePageState extends State<CreateGamePage> {
     _titleController.dispose();
     _descriptionController.dispose();
     super.dispose();
+  }
+  
+  void _selectTemplate(String templateId) {
+    final template = _gameTemplates.firstWhere((t) => t['id'] == templateId);
+    
+    setState(() {
+      _selectedTemplate = templateId;
+      _showTemplateSelection = false;
+      _selectedCategory = template['category'] as String;
+      
+      // Pre-fill title with template name if it's not a custom template
+      if (templateId != 'custom') {
+        _titleController.text = '${template['name']} Game';
+      }
+      
+      // Add sample questions if available
+      _questions.clear();
+      if ((template['sampleQuestions'] as List).isNotEmpty) {
+        for (var question in template['sampleQuestions']) {
+          _questions.add({
+            'text': question['text'],
+            'points': question['points'],
+            'options': List<Map<String, dynamic>>.from(question['options']),
+          });
+        }
+      } else {
+        // Add an empty question
+        _addNewQuestion();
+      }
+    });
+  }
+  
+  void _backToTemplates() {
+    setState(() {
+      _showTemplateSelection = true;
+      _selectedTemplate = null;
+      _questions.clear();
+      _titleController.clear();
+      _descriptionController.clear();
+    });
   }
   
   void _addNewQuestion() {
@@ -87,6 +233,44 @@ class _CreateGamePageState extends State<CreateGamePage> {
   void _updatePoints(int questionIndex, int points) {
     setState(() {
       _questions[questionIndex]['points'] = points;
+    });
+  }
+  
+  void _addOption(int questionIndex) {
+    if (_questions[questionIndex]['options'].length < 6) {
+      setState(() {
+        _questions[questionIndex]['options'].add({
+          'text': '',
+          'isCorrect': false,
+        });
+      });
+    }
+  }
+  
+  void _removeOption(int questionIndex, int optionIndex) {
+    if (_questions[questionIndex]['options'].length > 2) {
+      // Check if this is the correct option
+      bool isCorrect = _questions[questionIndex]['options'][optionIndex]['isCorrect'];
+      
+      setState(() {
+        _questions[questionIndex]['options'].removeAt(optionIndex);
+        
+        // If we removed the correct option, make the first option correct
+        if (isCorrect) {
+          _questions[questionIndex]['options'][0]['isCorrect'] = true;
+        }
+      });
+    }
+  }
+  
+  void _duplicateQuestion(int index) {
+    setState(() {
+      final questionCopy = Map<String, dynamic>.from(_questions[index]);
+      // Deep copy options
+      questionCopy['options'] = List<Map<String, dynamic>>.from(
+        _questions[index]['options'].map((option) => Map<String, dynamic>.from(option))
+      );
+      _questions.insert(index + 1, questionCopy);
     });
   }
   
@@ -167,321 +351,545 @@ class _CreateGamePageState extends State<CreateGamePage> {
     final isSmallScreen = size.width < 768;
 
     return Scaffold(
-      backgroundColor: colorScheme.background,
+      backgroundColor: colorScheme.surface,
       body: Column(
         children: [
           const Navbar(isAuthenticated: true, userRole: 'teacher'),
           Expanded(
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
-                : SingleChildScrollView(
-                    child: Padding(
-                      padding: EdgeInsets.all(isSmallScreen ? 16 : 32),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
+                : _showTemplateSelection
+                    ? _buildTemplateSelection(context, isSmallScreen)
+                    : SingleChildScrollView(
+                        child: Padding(
+                          padding: EdgeInsets.all(isSmallScreen ? 16 : 32),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              IconButton(
-                                icon: const Icon(Icons.arrow_back),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
+                              Row(
+                                children: [
+                                  IconButton(
+                                    icon: const Icon(Icons.arrow_back),
+                                    onPressed: _backToTemplates,
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Text(
+                                    'Create New Game',
+                                    style: TextStyle(
+                                      fontSize: 28,
+                                      fontWeight: FontWeight.bold,
+                                      color: colorScheme.onSurface,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(width: 16),
+                              const SizedBox(height: 8),
                               Text(
-                                'Create New Game',
+                                'Design an educational game for your students',
                                 style: TextStyle(
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.bold,
-                                  color: colorScheme.onSurface,
+                                  fontSize: 16,
+                                  color: colorScheme.onSurfaceVariant,
                                 ),
                               ),
-                            ],
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Design an educational game for your students',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                          const SizedBox(height: 32),
-                          
-                          Form(
-                            key: _formKey,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // Game Basic Info
-                                AppCard(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'Game Information',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w600,
-                                          color: colorScheme.onSurface,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 24),
-                                      
-                                      AppInput(
-                                        label: 'Game Title',
-                                        placeholder: 'Enter a title for your game',
-                                        controller: _titleController,
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return 'Please enter a title';
-                                          }
-                                          return null;
-                                        },
-                                      ),
-                                      const SizedBox(height: 24),
-                                      
-                                      AppInput(
-                                        label: 'Description',
-                                        placeholder: 'Enter a description of your game',
-                                        controller: _descriptionController,
-                                        maxLines: 3,
-                                        validator: (value) {
-                                          if (value == null || value.isEmpty) {
-                                            return 'Please enter a description';
-                                          }
-                                          return null;
-                                        },
-                                      ),
-                                      const SizedBox(height: 24),
-                                      
-                                      Row(
+                              const SizedBox(height: 32),
+                              
+                              Form(
+                                key: _formKey,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Game Basic Info
+                                    AppCard(
+                                      child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  'Category',
-                                                  style: TextStyle(
-                                                    color: colorScheme.onSurface,
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                                const SizedBox(height: 8),
-                                                DropdownButtonFormField<String>(
-                                                  value: _selectedCategory,
-                                                  decoration: InputDecoration(
-                                                    border: OutlineInputBorder(
-                                                      borderRadius: BorderRadius.circular(8),
-                                                    ),
-                                                    contentPadding: const EdgeInsets.symmetric(
-                                                      horizontal: 16,
-                                                      vertical: 12,
-                                                    ),
-                                                  ),
-                                                  items: [
-                                                    'Mathematics',
-                                                    'Science',
-                                                    'Language Arts',
-                                                    'Social Studies',
-                                                    'Foreign Languages',
-                                                    'Programming',
-                                                    'Arts',
-                                                    'Other',
-                                                  ].map((String category) {
-                                                    return DropdownMenuItem<String>(
-                                                      value: category,
-                                                      child: Text(category),
-                                                    );
-                                                  }).toList(),
-                                                  onChanged: (String? newValue) {
-                                                    if (newValue != null) {
-                                                      setState(() {
-                                                        _selectedCategory = newValue;
-                                                      });
-                                                    }
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          const SizedBox(width: 24),
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  'Difficulty Level',
-                                                  style: TextStyle(
-                                                    color: colorScheme.onSurface,
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                                const SizedBox(height: 8),
-                                                Row(
-                                                  children: List.generate(5, (index) {
-                                                    return IconButton(
-                                                      icon: Icon(
-                                                        index < _selectedDifficulty
-                                                            ? Icons.star
-                                                            : Icons.star_border,
-                                                        color: index < _selectedDifficulty
-                                                            ? colorScheme.tertiary
-                                                            : colorScheme.outline,
-                                                      ),
-                                                      onPressed: () {
-                                                        setState(() {
-                                                          _selectedDifficulty = index + 1;
-                                                        });
-                                                      },
-                                                    );
-                                                  }),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 24),
-                                      
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  'Estimated Time (minutes)',
-                                                  style: TextStyle(
-                                                    color: colorScheme.onSurface,
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                                const SizedBox(height: 8),
-                                                Slider(
-                                                  value: _estimatedTime.toDouble(),
-                                                  min: 5,
-                                                  max: 30,
-                                                  divisions: 5,
-                                                  label: _estimatedTime.toString(),
-                                                  onChanged: (double value) {
-                                                    setState(() {
-                                                      _estimatedTime = value.toInt();
-                                                    });
-                                                  },
-                                                ),
-                                                Center(
-                                                  child: Text(
-                                                    '$_estimatedTime minutes',
-                                                    style: TextStyle(
-                                                      color: colorScheme.onSurfaceVariant,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(height: 32),
-                                
-                                // Questions Section
-                                AppCard(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
                                           Text(
-                                            'Questions',
+                                            'Game Information',
                                             style: TextStyle(
                                               fontSize: 18,
                                               fontWeight: FontWeight.w600,
                                               color: colorScheme.onSurface,
                                             ),
                                           ),
-                                          AppButton(
-                                            text: 'Add Question',
-                                            variant: ButtonVariant.outline,
-                                            size: ButtonSize.small,
-                                            leadingIcon: Icons.add,
-                                            onPressed: _addNewQuestion,
+                                          const SizedBox(height: 24),
+                                          
+                                          AppInput(
+                                            label: 'Game Title',
+                                            placeholder: 'Enter a title for your game',
+                                            controller: _titleController,
+                                            validator: (value) {
+                                              if (value == null || value.isEmpty) {
+                                                return 'Please enter a title';
+                                              }
+                                              return null;
+                                            },
+                                          ),
+                                          const SizedBox(height: 24),
+                                          
+                                          AppInput(
+                                            label: 'Description',
+                                            placeholder: 'Enter a description of your game',
+                                            controller: _descriptionController,
+                                            maxLines: 3,
+                                            validator: (value) {
+                                              if (value == null || value.isEmpty) {
+                                                return 'Please enter a description';
+                                              }
+                                              return null;
+                                            },
+                                          ),
+                                          const SizedBox(height: 24),
+                                          
+                                          Row(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Category',
+                                                      style: TextStyle(
+                                                        color: colorScheme.onSurface,
+                                                        fontSize: 14,
+                                                        fontWeight: FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 8),
+                                                    DropdownButtonFormField<String>(
+                                                      value: _selectedCategory,
+                                                      decoration: InputDecoration(
+                                                        border: OutlineInputBorder(
+                                                          borderRadius: BorderRadius.circular(8),
+                                                        ),
+                                                        contentPadding: const EdgeInsets.symmetric(
+                                                          horizontal: 16,
+                                                          vertical: 12,
+                                                        ),
+                                                      ),
+                                                      items: [
+                                                        'Mathematics',
+                                                        'Science',
+                                                        'Language Arts',
+                                                        'Social Studies',
+                                                        'Foreign Languages',
+                                                        'Programming',
+                                                        'Arts',
+                                                        'Other',
+                                                      ].map((String category) {
+                                                        return DropdownMenuItem<String>(
+                                                          value: category,
+                                                          child: Text(category),
+                                                        );
+                                                      }).toList(),
+                                                      onChanged: (String? newValue) {
+                                                        if (newValue != null) {
+                                                          setState(() {
+                                                            _selectedCategory = newValue;
+                                                          });
+                                                        }
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              const SizedBox(width: 24),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Difficulty Level',
+                                                      style: TextStyle(
+                                                        color: colorScheme.onSurface,
+                                                        fontSize: 14,
+                                                        fontWeight: FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 8),
+                                                    Row(
+                                                      children: List.generate(5, (index) {
+                                                        return IconButton(
+                                                          icon: Icon(
+                                                            index < _selectedDifficulty
+                                                                ? Icons.star
+                                                                : Icons.star_border,
+                                                            color: index < _selectedDifficulty
+                                                                ? colorScheme.tertiary
+                                                                : colorScheme.outline,
+                                                          ),
+                                                          onPressed: () {
+                                                            setState(() {
+                                                              _selectedDifficulty = index + 1;
+                                                            });
+                                                          },
+                                                        );
+                                                      }),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 24),
+                                          
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      'Estimated Time (minutes)',
+                                                      style: TextStyle(
+                                                        color: colorScheme.onSurface,
+                                                        fontSize: 14,
+                                                        fontWeight: FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(height: 8),
+                                                    Slider(
+                                                      value: _estimatedTime.toDouble(),
+                                                      min: 5,
+                                                      max: 30,
+                                                      divisions: 5,
+                                                      label: _estimatedTime.toString(),
+                                                      onChanged: (double value) {
+                                                        setState(() {
+                                                          _estimatedTime = value.toInt();
+                                                        });
+                                                      },
+                                                    ),
+                                                    Center(
+                                                      child: Text(
+                                                        '$_estimatedTime minutes',
+                                                        style: TextStyle(
+                                                          color: colorScheme.onSurfaceVariant,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
-                                      const SizedBox(height: 16),
-                                      
-                                      // Questions List
-                                      ListView.builder(
-                                        shrinkWrap: true,
-                                        physics: const NeverScrollableScrollPhysics(),
-                                        itemCount: _questions.length,
-                                        itemBuilder: (context, index) {
-                                          return _buildQuestionCard(context, index);
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const SizedBox(height: 32),
-                                
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: AppButton(
-                                        text: 'Cancel',
-                                        variant: ButtonVariant.outline,
-                                        isFullWidth: true,
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
+                                    ),
+                                    const SizedBox(height: 32),
+                                    
+                                    // Questions Section
+                                    AppCard(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                'Questions',
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: colorScheme.onSurface,
+                                                ),
+                                              ),
+                                              Row(
+                                                children: [
+                                                  AppButton(
+                                                    text: 'Import Questions',
+                                                    variant: ButtonVariant.outline,
+                                                    size: ButtonSize.small,
+                                                    leadingIcon: Icons.upload_file,
+                                                    onPressed: () {
+                                                      // TODO: Implement import functionality
+                                                    },
+                                                  ),
+                                                  const SizedBox(width: 8),
+                                                  AppButton(
+                                                    text: 'Add Question',
+                                                    variant: ButtonVariant.primary,
+                                                    size: ButtonSize.small,
+                                                    leadingIcon: Icons.add,
+                                                    onPressed: _addNewQuestion,
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 16),
+                                          
+                                          // Questions List
+                                          ReorderableListView.builder(
+                                            shrinkWrap: true,
+                                            physics: const NeverScrollableScrollPhysics(),
+                                            itemCount: _questions.length,
+                                            onReorder: (oldIndex, newIndex) {
+                                              setState(() {
+                                                if (oldIndex < newIndex) {
+                                                  newIndex -= 1;
+                                                }
+                                                final item = _questions.removeAt(oldIndex);
+                                                _questions.insert(newIndex, item);
+                                              });
+                                            },
+                                            itemBuilder: (context, index) {
+                                              return _buildQuestionCard(context, index, key: ValueKey('question_$index'));
+                                            },
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    const SizedBox(width: 16),
-                                    Expanded(
-                                      child: AppButton(
-                                        text: 'Save Game',
-                                        variant: ButtonVariant.primary,
-                                        isFullWidth: true,
-                                        isLoading: _isSaving,
-                                        onPressed: _saveGame,
-                                      ),
+                                    const SizedBox(height: 32),
+                                    
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: AppButton(
+                                            text: 'Cancel',
+                                            variant: ButtonVariant.outline,
+                                            isFullWidth: true,
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                          ),
+                                        ),
+                                        const SizedBox(width: 16),
+                                        Expanded(
+                                          child: AppButton(
+                                            text: 'Save Game',
+                                            variant: ButtonVariant.primary,
+                                            isFullWidth: true,
+                                            isLoading: _isSaving,
+                                            onPressed: _saveGame,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
           ),
         ],
       ),
     );
   }
   
-  Widget _buildQuestionCard(BuildContext context, int questionIndex) {
+  Widget _buildTemplateSelection(BuildContext context, bool isSmallScreen) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.all(isSmallScreen ? 16 : 32),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                const SizedBox(width: 16),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Choose a Template',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: colorScheme.onSurface,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Select a template to start creating your game',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 32),
+            
+            // Template Grid
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: isSmallScreen ? 1 : 2,
+                crossAxisSpacing: 24,
+                mainAxisSpacing: 24,
+                childAspectRatio: isSmallScreen ? 1.2 : 1.5,
+              ),
+              itemCount: _gameTemplates.length,
+              itemBuilder: (context, index) {
+                final template = _gameTemplates[index];
+                final templateId = template['id'] as String;
+                final templateName = template['name'] as String;
+                final templateDesc = template['description'] as String;
+                final templateIcon = template['icon'] as IconData;
+                final templateColor = template['color'] as Color;
+                
+                return AppCard(
+                  isHoverable: true,
+                  backgroundColor: colorScheme.surface,
+                  onTap: () => _selectTemplate(templateId),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: templateColor.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Icon(
+                              templateIcon,
+                              color: templateColor,
+                              size: 32,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                templateName,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: colorScheme.onSurface,
+                                ),
+                              ),
+                              Text(
+                                'Template',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        templateDesc,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                      const Spacer(),
+                      if (templateId != 'custom') ...[
+                        Text(
+                          'Preview:',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: colorScheme.onSurface,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: colorScheme.surfaceVariant.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 32,
+                                height: 32,
+                                decoration: BoxDecoration(
+                                  color: templateColor.withOpacity(0.2),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'Q',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: templateColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Sample Question',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                        color: colorScheme.onSurfaceVariant,
+                                      ),
+                                    ),
+                                    Text(
+                                      template['sampleQuestions'].isNotEmpty 
+                                        ? template['sampleQuestions'][0]['text'] 
+                                        : 'No sample questions',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: colorScheme.onSurface,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                      const SizedBox(height: 16),
+                      AppButton(
+                        text: 'Use This Template',
+                        variant: ButtonVariant.primary,
+                        isFullWidth: true,
+                        onPressed: () => _selectTemplate(templateId),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+  
+  Widget _buildQuestionCard(BuildContext context, int questionIndex, {required Key key}) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final question = _questions[questionIndex];
     
     return Container(
+      key: key,
       margin: const EdgeInsets.only(bottom: 24),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: colorScheme.surfaceVariant.withOpacity(0.3),
+        color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: colorScheme.outline.withOpacity(0.2)),
       ),
@@ -491,20 +899,42 @@ class _CreateGamePageState extends State<CreateGamePage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Question ${questionIndex + 1}',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: colorScheme.onSurface,
-                ),
+              Row(
+                children: [
+                  Icon(
+                    Icons.drag_indicator,
+                    color: colorScheme.onSurfaceVariant.withOpacity(0.5),
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Question ${questionIndex + 1}',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
+                ],
               ),
-              IconButton(
-                icon: Icon(
-                  Icons.delete_outline,
-                  color: colorScheme.error,
-                ),
-                onPressed: () => _removeQuestion(questionIndex),
+              Row(
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.copy,
+                      color: colorScheme.primary,
+                    ),
+                    tooltip: 'Duplicate',
+                    onPressed: () => _duplicateQuestion(questionIndex),
+                  ),
+                  IconButton(
+                    icon: Icon(
+                      Icons.delete_outline,
+                      color: colorScheme.error,
+                    ),
+                    tooltip: 'Delete',
+                    onPressed: () => _removeQuestion(questionIndex),
+                  ),
+                ],
               ),
             ],
           ),
@@ -558,13 +988,33 @@ class _CreateGamePageState extends State<CreateGamePage> {
           ),
           const SizedBox(height: 24),
           
-          Text(
-            'Options (select the correct answer)',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              color: colorScheme.onSurface,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Options (select the correct answer)',
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: colorScheme.onSurface,
+                ),
+              ),
+              TextButton.icon(
+                icon: Icon(
+                  Icons.add_circle_outline,
+                  size: 16,
+                  color: colorScheme.primary,
+                ),
+                label: Text(
+                  'Add Option',
+                  style: TextStyle(
+                    color: colorScheme.primary,
+                    fontSize: 14,
+                  ),
+                ),
+                onPressed: () => _addOption(questionIndex),
+              ),
+            ],
           ),
           const SizedBox(height: 16),
           
@@ -576,6 +1026,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
             itemBuilder: (context, optionIndex) {
               final option = question['options'][optionIndex];
               final isCorrect = option['isCorrect'] == true;
+              final optionLetter = String.fromCharCode(65 + optionIndex); // A, B, C, etc.
               
               return Container(
                 margin: const EdgeInsets.only(bottom: 8),
@@ -589,20 +1040,57 @@ class _CreateGamePageState extends State<CreateGamePage> {
                       },
                     ),
                     const SizedBox(width: 8),
+                    Container(
+                      width: 28,
+                      height: 28,
+                      decoration: BoxDecoration(
+                        color: isCorrect 
+                          ? colorScheme.primary.withOpacity(0.1) 
+                          : colorScheme.surfaceVariant,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: isCorrect 
+                            ? colorScheme.primary
+                            : colorScheme.outline.withOpacity(0.5),
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          optionLetter,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: isCorrect ? colorScheme.primary : colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
                     Expanded(
                       child: TextFormField(
                         initialValue: option['text'],
                         decoration: InputDecoration(
-                          hintText: 'Option ${['A', 'B', 'C', 'D'][optionIndex]}',
+                          hintText: 'Option $optionLetter',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
                           filled: isCorrect,
-                          fillColor: isCorrect ? colorScheme.secondary.withOpacity(0.1) : null,
+                          fillColor: isCorrect ? colorScheme.primary.withOpacity(0.05) : null,
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
                         ),
                         onChanged: (value) => _updateOptionText(questionIndex, optionIndex, value),
                       ),
                     ),
+                    const SizedBox(width: 8),
+                    if (question['options'].length > 2)
+                      IconButton(
+                        icon: Icon(
+                          Icons.remove_circle_outline,
+                          color: colorScheme.error,
+                          size: 20,
+                        ),
+                        tooltip: 'Remove Option',
+                        onPressed: () => _removeOption(questionIndex, optionIndex),
+                      ),
                   ],
                 ),
               );

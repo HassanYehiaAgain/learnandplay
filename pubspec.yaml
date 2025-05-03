@@ -30,6 +30,16 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  firebase_core: 2.10.0
+  firebase_core_web: 2.3.0
+  firebase_auth: 4.4.0
+  firebase_auth_web: 5.3.0
+  cloud_firestore: 4.5.0
+  js: ^0.6.5
+  
+  # Other dependencies you might need:
+  # firebase_storage: ^11.2.6
+  # google_sign_in: ^6.1.4
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -50,8 +60,6 @@ dependencies:
   flutter_animate: ^4.5.0
   shimmer: ^3.0.0
   carousel_slider: ^4.2.1
-  flutter_form_builder: ^9.2.1
-  form_builder_validators: 11.1.2
   
   # API & Data Handling
   dio: ^5.4.2
@@ -62,10 +70,10 @@ dependencies:
   
   # Charts and Visualizations
   fl_chart: ^0.66.2
-  syncfusion_flutter_charts: ^25.1.35
+  syncfusion_flutter_charts: ^21.2.4
   
   # Utilities
-  intl: ^0.19.0
+  intl: 0.17.0
   uuid: ^4.3.3
   url_launcher: ^6.2.5
   image_picker: ^1.0.7
@@ -111,12 +119,20 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: CustomFont
-  #     fonts:
-  #       - asset: assets/fonts/CustomFont-Regular.ttf
-  #       - asset: assets/fonts/CustomFont-Bold.ttf
-  #         weight: 700
+  fonts:
+    - family: PressStart2P
+      fonts:
+        - asset: assets/fonts/PressStart2P-Regular.ttf
+    - family: PixelifySans
+      fonts:
+        - asset: assets/fonts/PixelifySans-Regular.ttf
+        - asset: assets/fonts/PixelifySans-Bold.ttf
+          weight: 700
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+        - asset: assets/fonts/Inter-Bold.ttf
+          weight: 700
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

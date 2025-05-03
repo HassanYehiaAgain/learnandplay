@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:learn_play_level_up_flutter/components/navbar.dart';
 import 'package:learn_play_level_up_flutter/components/ui/button.dart';
+import 'package:learn_play_level_up_flutter/components/ui/card.dart';
+import 'package:learn_play_level_up_flutter/theme/app_theme.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:go_router/go_router.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +17,7 @@ class HomePage extends StatelessWidget {
     final isSmallScreen = size.width < 768;
 
     return Scaffold(
-      backgroundColor: colorScheme.background,
+      backgroundColor: colorScheme.surface,
       body: Column(
         children: [
           const Navbar(isAuthenticated: false),
@@ -22,14 +26,20 @@ class HomePage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Hero Section
-                  _buildHeroSection(context, isSmallScreen),
+                  // Welcome Section (Hero Section)
+                  _buildWelcomeSection(context, isSmallScreen),
                   
-                  // Features Section
-                  _buildFeaturesSection(context, isSmallScreen),
+                  // Core Features Section
+                  _buildCoreFeaturesSection(context, isSmallScreen),
                   
-                  // Game Templates Section
-                  _buildGameTemplatesSection(context, isSmallScreen),
+                  // Teacher Section
+                  _buildTeacherSection(context, isSmallScreen),
+                  
+                  // Student Section
+                  _buildStudentSection(context, isSmallScreen),
+                  
+                  // Ready to Level Up Section
+                  _buildReadyToLevelUpSection(context, isSmallScreen),
                   
                   // Footer
                   _buildFooter(context, isSmallScreen),
@@ -42,7 +52,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildHeroSection(BuildContext context, bool isSmallScreen) {
+  Widget _buildWelcomeSection(BuildContext context, bool isSmallScreen) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     
@@ -51,7 +61,16 @@ class HomePage extends StatelessWidget {
         horizontal: isSmallScreen ? 20 : 80,
         vertical: isSmallScreen ? 40 : 80,
       ),
-      color: colorScheme.surface,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            colorScheme.primary.withOpacity(0.2),
+            colorScheme.secondaryContainer.withOpacity(0.2),
+          ],
+        ),
+      ),
       child: Column(
         children: [
           Row(
@@ -62,43 +81,83 @@ class HomePage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'Learn through play,\nlevel up your classroom',
-                        style: TextStyle(
-                          color: colorScheme.onSurface,
-                          fontSize: isSmallScreen ? 28 : 48,
-                          fontWeight: FontWeight.bold,
-                          height: 1.2,
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: colorScheme.primary.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: colorScheme.primary.withOpacity(0.3),
+                            width: 2,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 20),
-                      Text(
-                        'Create engaging educational games for your students. Track progress, celebrate achievements, and make learning fun.',
+                        child: Text(
+                          'Welcome to Learn & Play',
                         style: TextStyle(
+                          fontFamily: 'PressStart2P',
+                          color: colorScheme.onSurface,
+                            fontSize: isSmallScreen ? 22 : 32,
+                          height: 1.4,
+                          ),
+                        ),
+                      ).animate()
+                       .fadeIn(duration: 600.ms)
+                       .slideX(begin: -0.2, end: 0),
+                      const SizedBox(height: 16),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: colorScheme.secondaryContainer.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: colorScheme.secondaryContainer.withOpacity(0.3),
+                            width: 2,
+                          ),
+                        ),
+                        child: Text(
+                          'Transform your classroom',
+                        style: TextStyle(
+                          fontFamily: 'PressStart2P',
+                            color: colorScheme.secondary,
+                            fontSize: isSmallScreen ? 22 : 32,
+                          height: 1.4,
+                          ),
+                        ),
+                      ).animate()
+                       .fadeIn(duration: 600.ms, delay: 400.ms)
+                       .slideX(begin: -0.2, end: 0),
+                      const SizedBox(height: 20),
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          gradient: AppGradients.lightTealBackground,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: colorScheme.outline.withOpacity(0.2),
+                            width: 1,
+                          ),
+                        ),
+                        child: Text(
+                          'Transform classroom education into exciting adventures! A platform combines learning with play, helping students engage with subjects through interactive games, challenges, and rewards.',
+                        style: TextStyle(
+                            fontFamily: 'PixelifySans',
                           color: colorScheme.onSurfaceVariant,
                           fontSize: isSmallScreen ? 16 : 18,
                           height: 1.5,
+                          ),
                         ),
-                      ),
+                      ).animate()
+                       .fadeIn(duration: 600.ms, delay: 800.ms),
                       const SizedBox(height: 40),
-                      Row(
-                        children: [
                           AppButton(
                             text: 'Get Started',
-                            variant: ButtonVariant.primary,
+                            variant: ButtonVariant.gradient,
                             size: ButtonSize.large,
                             leadingIcon: Icons.play_arrow,
-                            onPressed: () {},
-                          ),
-                          const SizedBox(width: 16),
-                          AppButton(
-                            text: 'Learn More',
-                            variant: ButtonVariant.outline,
-                            size: ButtonSize.large,
-                            onPressed: () {},
-                          ),
-                        ],
-                      ),
+                            onPressed: () => GoRouter.of(context).go('/register'),
+                          ).animate()
+                           .fadeIn(duration: 600.ms, delay: 1200.ms)
+                           .slideY(begin: 0.2, end: 0),
                     ],
                   ),
                 ),
@@ -106,41 +165,84 @@ class HomePage extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Learn through play,\nlevel up your classroom',
-                      style: TextStyle(
-                        color: colorScheme.onSurface,
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        height: 1.2,
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: colorScheme.primary.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: colorScheme.primary.withOpacity(0.3),
+                          width: 2,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      'Create engaging educational games for your students. Track progress, celebrate achievements, and make learning fun.',
+                      child: Text(
+                        'Welcome to Learn & Play',
                       style: TextStyle(
+                        fontFamily: 'PressStart2P',
+                        color: colorScheme.onSurface,
+                        fontSize: 22,
+                        height: 1.4,
+                        ),
+                      ),
+                    ).animate()
+                     .fadeIn(duration: 600.ms)
+                     .slideX(begin: -0.2, end: 0),
+                    const SizedBox(height: 16),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: colorScheme.secondaryContainer.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(
+                          color: colorScheme.secondaryContainer.withOpacity(0.3),
+                          width: 2,
+                        ),
+                      ),
+                      child: Text(
+                        'Transform your classroom',
+                      style: TextStyle(
+                        fontFamily: 'PressStart2P',
+                          color: colorScheme.secondary,
+                        fontSize: 22,
+                        height: 1.4,
+                        ),
+                      ),
+                    ).animate()
+                     .fadeIn(duration: 600.ms, delay: 400.ms)
+                     .slideX(begin: -0.2, end: 0),
+                    const SizedBox(height: 20),
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        gradient: AppGradients.lightTealBackground,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: colorScheme.outline.withOpacity(0.2),
+                          width: 1,
+                        ),
+                      ),
+                      child: Text(
+                        'Transform classroom education into exciting adventures! A platform combines learning with play, helping students engage with subjects through interactive games, challenges, and rewards.',
+                      style: TextStyle(
+                          fontFamily: 'PixelifySans',
                         color: colorScheme.onSurfaceVariant,
                         fontSize: 16,
                         height: 1.5,
+                        ),
                       ),
-                    ),
+                    ).animate()
+                     .fadeIn(duration: 600.ms, delay: 800.ms),
                     const SizedBox(height: 30),
                     AppButton(
                       text: 'Get Started',
-                      variant: ButtonVariant.primary,
+                      variant: ButtonVariant.gradient,
                       size: ButtonSize.large,
                       leadingIcon: Icons.play_arrow,
                       isFullWidth: true,
-                      onPressed: () {},
-                    ),
-                    const SizedBox(height: 12),
-                    AppButton(
-                      text: 'Learn More',
-                      variant: ButtonVariant.outline,
-                      size: ButtonSize.large,
-                      isFullWidth: true,
-                      onPressed: () {},
-                    ),
+                      onPressed: () => GoRouter.of(context).go('/register'),
+                    ).animate()
+                     .fadeIn(duration: 600.ms, delay: 1200.ms)
+                     .slideY(begin: 0.2, end: 0),
                     const SizedBox(height: 40),
                   ],
                 ),
@@ -148,202 +250,198 @@ class HomePage extends StatelessWidget {
                 Expanded(
                   flex: 6,
                   child: Center(
-                    child: Container(
-                      height: 400,
-                      decoration: BoxDecoration(
-                        color: colorScheme.primaryContainer,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Center(
-                        child: Icon(
-                          Icons.gamepad,
-                          size: 100,
-                          color: colorScheme.primary,
-                        ),
-                      ),
-                    ),
+                    child: _buildHeroGraphics(context),
                   ),
                 ),
             ],
           ),
           if (isSmallScreen)
-            Container(
-              height: 240,
-              margin: const EdgeInsets.only(top: 20),
-              decoration: BoxDecoration(
-                color: colorScheme.primaryContainer,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Center(
-                child: Icon(
-                  Icons.gamepad,
-                  size: 80,
-                  color: colorScheme.primary,
-                ),
-              ),
-            ),
+            _buildHeroGraphics(context),
         ],
       ),
     );
   }
-
-  Widget _buildFeaturesSection(BuildContext context, bool isSmallScreen) {
+  
+  Widget _buildCoreFeaturesSection(BuildContext context, bool isSmallScreen) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
-    final features = [
-      {
-        'icon': Icons.games_outlined,
-        'title': 'Interactive Games',
-        'description': 'Engage students with fun, interactive educational games that make learning enjoyable.'
-      },
-      {
-        'icon': Icons.bar_chart,
-        'title': 'Progress Tracking',
-        'description': 'Monitor student progress with detailed analytics and performance metrics.'
-      },
-      {
-        'icon': Icons.emoji_events_outlined,
-        'title': 'Achievements & Rewards',
-        'description': 'Motivate students with achievement badges and milestone rewards.'
-      },
-      {
-        'icon': Icons.person_outline,
-        'title': 'Personalized Learning',
-        'description': 'Adapt content to individual student needs and learning styles.'
-      },
-    ];
     
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: isSmallScreen ? 20 : 80,
         vertical: 60,
       ),
-      color: colorScheme.surfaceVariant.withOpacity(0.3),
+      color: colorScheme.surfaceContainerLow,
       child: Column(
         children: [
           Text(
-            'Features',
+            'Core Features',
             style: TextStyle(
-              color: colorScheme.primary,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'Everything you need to enhance learning',
-            style: TextStyle(
+              fontFamily: 'PixelifySans',
               color: colorScheme.onSurface,
-              fontSize: isSmallScreen ? 24 : 36,
+              fontSize: 36,
               fontWeight: FontWeight.bold,
-              height: 1.2,
             ),
-            textAlign: TextAlign.center,
-          ),
+          ).animate()
+           .fadeIn(duration: 600.ms),
           const SizedBox(height: 16),
           Text(
-            'Our platform combines powerful educational tools with engaging gameplay elements.',
+            'Our platform offers powerful tools for both teachers and students to enhance the educational experience',
             style: TextStyle(
+              fontFamily: 'Inter',
               color: colorScheme.onSurfaceVariant,
-              fontSize: 16,
-              height: 1.5,
+              fontSize: 18,
+              height: 1.6,
             ),
             textAlign: TextAlign.center,
-          ),
+          ).animate()
+           .fadeIn(duration: 600.ms, delay: 200.ms),
           const SizedBox(height: 60),
-          Wrap(
-            spacing: 24,
-            runSpacing: 24,
-            children: features.map((feature) {
-              return Container(
-                width: isSmallScreen ? double.infinity : 280,
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: colorScheme.surface,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: colorScheme.outline.withOpacity(0.1)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: colorScheme.shadow.withOpacity(0.04),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
+          
+          // Features Grid/Row
+          isSmallScreen 
+            ? Column(
+            children: [
+                  _buildFeatureCard(
+                context,
+                    icon: Icons.emoji_events,
+                    iconColor: AppTheme.purple,
+                    title: 'Gamified Learning',
+                    description: 'Transform traditional lessons into exciting game experiences that students love to play.',
+              ),
+                  const SizedBox(height: 24),
+                  _buildFeatureCard(
+                context,
+                    icon: Icons.bar_chart,
+                    iconColor: AppTheme.teal,
+                    title: 'Comprehensive Analytics',
+                    description: 'Track student progress and identify areas where additional support might be needed.',
+                  ),
+                  const SizedBox(height: 24),
+                  _buildFeatureCard(
+                context,
+                    icon: Icons.verified,
+                    iconColor: AppTheme.green,
+                    title: 'Achievement System',
+                    description: 'Motivate students with badges, trophies, and rewards for their accomplishments.',
+                  ),
+                ],
+              ).animate()
+               .fadeIn(duration: 800.ms, delay: 400.ms)
+            : Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: _buildFeatureCard(
+                      context,
+                      icon: Icons.emoji_events,
+                      iconColor: AppTheme.purple,
+                      title: 'Gamified Learning',
+                      description: 'Transform traditional lessons into exciting game experiences that students love to play.',
                     ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: colorScheme.primary.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Icon(
-                        feature['icon'] as IconData,
-                        color: colorScheme.primary,
-                        size: 24,
-                      ),
+                  ),
+                  const SizedBox(width: 24),
+                  Expanded(
+                    child: _buildFeatureCard(
+                      context,
+                      icon: Icons.bar_chart,
+                      iconColor: AppTheme.teal,
+                      title: 'Comprehensive Analytics',
+                      description: 'Track student progress and identify areas where additional support might be needed.',
                     ),
-                    const SizedBox(height: 16),
-                    Text(
-                      feature['title'] as String,
-                      style: TextStyle(
-                        color: colorScheme.onSurface,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
+                  ),
+                  const SizedBox(width: 24),
+                  Expanded(
+                    child: _buildFeatureCard(
+                      context,
+                      icon: Icons.verified,
+                      iconColor: AppTheme.green,
+                      title: 'Achievement System',
+                      description: 'Motivate students with badges, trophies, and rewards for their accomplishments.',
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      feature['description'] as String,
-                      style: TextStyle(
-                        color: colorScheme.onSurfaceVariant,
-                        fontSize: 14,
-                        height: 1.5,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }).toList(),
-          ),
+              ),
+            ],
+              ).animate()
+               .fadeIn(duration: 800.ms, delay: 400.ms),
         ],
       ),
     );
   }
-
-  Widget _buildGameTemplatesSection(BuildContext context, bool isSmallScreen) {
+  
+  Widget _buildFeatureCard(BuildContext context, {
+    required IconData icon,
+    required Color iconColor,
+    required String title,
+    required String description,
+  }) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     
-    final gameTemplates = [
-      {
-        'title': 'Math Challenge',
-        'description': 'Fun math puzzles and problems for all grade levels',
-        'image': Icons.calculate_outlined,
-        'color': colorScheme.primary,
-      },
-      {
-        'title': 'Vocabulary Quest',
-        'description': 'Build vocabulary through interactive word games',
-        'image': Icons.menu_book_outlined,
-        'color': colorScheme.secondary,
-      },
-      {
-        'title': 'Science Explorer',
-        'description': 'Discover scientific concepts through virtual experiments',
-        'image': Icons.science_outlined,
-        'color': colorScheme.tertiary,
-      },
-      {
-        'title': 'History Timeline',
-        'description': 'Navigate through history with interactive timelines',
-        'image': Icons.history_edu_outlined,
-        'color': colorScheme.error,
-      },
-    ];
+    return Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+        color: colorScheme.surface,
+          borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: colorScheme.outline.withOpacity(0.2),
+          width: 1,
+        ),
+          boxShadow: [
+            BoxShadow(
+            color: colorScheme.shadow.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+            width: 80,
+            height: 80,
+              decoration: BoxDecoration(
+              color: iconColor.withOpacity(0.1),
+              shape: BoxShape.circle,
+              ),
+            child: Center(
+              child: Icon(
+                icon,
+                color: iconColor,
+                size: 36,
+              ),
+            ),
+          ),
+          const SizedBox(height: 20),
+            Text(
+              title,
+              style: TextStyle(
+                fontFamily: 'PixelifySans',
+              color: colorScheme.onSurface,
+              fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            textAlign: TextAlign.center,
+            ),
+          const SizedBox(height: 12),
+            Text(
+              description,
+              style: TextStyle(
+                fontFamily: 'Inter',
+              color: colorScheme.onSurfaceVariant,
+                fontSize: 14,
+              height: 1.6,
+              ),
+            textAlign: TextAlign.center,
+                  ),
+                ],
+      ),
+    );
+  }
+
+  Widget _buildTeacherSection(BuildContext context, bool isSmallScreen) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     
     return Container(
       padding: EdgeInsets.symmetric(
@@ -351,99 +449,367 @@ class HomePage extends StatelessWidget {
         vertical: 60,
       ),
       color: colorScheme.surface,
-      child: Column(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(
-            'Game Templates',
-            style: TextStyle(
-              color: colorScheme.primary,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'Ready-to-use educational games',
-            style: TextStyle(
-              color: colorScheme.onSurface,
-              fontSize: isSmallScreen ? 24 : 36,
-              fontWeight: FontWeight.bold,
-              height: 1.2,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Get started quickly with our pre-designed game templates or create your own.',
-            style: TextStyle(
-              color: colorScheme.onSurfaceVariant,
-              fontSize: 16,
-              height: 1.5,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 60),
-          Wrap(
-            spacing: 24,
-            runSpacing: 24,
-            children: gameTemplates.map((template) {
-              return Container(
-                width: isSmallScreen ? double.infinity : 280,
-                height: 280,
+          if (!isSmallScreen)
+            Expanded(
+              flex: 5,
+              child: Container(
+                height: 400,
                 decoration: BoxDecoration(
-                  color: (template['color'] as Color).withOpacity(0.1),
+                  color: colorScheme.primaryContainer.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: (template['color'] as Color).withOpacity(0.2)),
                 ),
+                child: Center(
+                  child: Icon(
+                    Icons.cast_for_education,
+                    size: 120,
+                    color: colorScheme.primary.withOpacity(0.5),
+                  ),
+                ),
+              ),
+            ),
+          if (!isSmallScreen) const SizedBox(width: 40),
+          Expanded(
+            flex: isSmallScreen ? 12 : 7,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(
-                      template['image'] as IconData,
-                      color: template['color'] as Color,
-                      size: 60,
+                Text(
+                  'For Teachers',
+                  style: TextStyle(
+                    fontFamily: 'PixelifySans',
+                        color: colorScheme.primary,
+                    fontSize: isSmallScreen ? 28 : 32,
+                    fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 16),
                     Text(
-                      template['title'] as String,
+                  'Create interactive educational games tailored to your curriculum. Design engaging quizzes, interactive puzzles, and memory games to reinforce learning concepts.',
                       style: TextStyle(
-                        color: colorScheme.onSurface,
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
+                    color: colorScheme.onSurfaceVariant,
+                    fontSize: 16,
+                    height: 1.6,
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        template['description'] as String,
-                        style: TextStyle(
-                          color: colorScheme.onSurfaceVariant,
-                          fontSize: 14,
-                          height: 1.5,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    const SizedBox(height: 24),
+                const SizedBox(height: 12),
+                    Text(
+                  'Track student progress, view detailed analytics, and understand where your students excel or need additional support.',
+                      style: TextStyle(
+                        color: colorScheme.onSurfaceVariant,
+                    fontSize: 16,
+                    height: 1.6,
+                  ),
+                ),
+                const SizedBox(height: 30),
+                Row(
+                  children: [
                     AppButton(
-                      text: 'Try it',
+                      text: 'Get Started',
+                      variant: ButtonVariant.gradient,
+                      size: ButtonSize.medium,
+                      onPressed: () => GoRouter.of(context).go('/register'),
+                      ),
+                    const SizedBox(width: 16),
+                    AppButton(
+                      text: 'Explore More',
                       variant: ButtonVariant.outline,
-                      size: ButtonSize.small,
-                      onPressed: () {},
+                      size: ButtonSize.medium,
+                      onPressed: () => GoRouter.of(context).go('/for-teachers'),
                     ),
                   ],
                 ),
-              );
-            }).toList(),
+              ],
+            ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStudentSection(BuildContext context, bool isSmallScreen) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: isSmallScreen ? 20 : 80,
+        vertical: 60,
+      ),
+      color: colorScheme.surfaceContainerLow,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            flex: isSmallScreen ? 12 : 7,
+      child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+                  'For Students',
+            style: TextStyle(
+                    fontFamily: 'PixelifySans',
+                    color: colorScheme.secondary,
+                    fontSize: isSmallScreen ? 28 : 32,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+                  'Learn through fun and engaging games designed by your teachers. Master new concepts while collecting achievements and competing with classmates.',
+            style: TextStyle(
+              color: colorScheme.onSurfaceVariant,
+              fontSize: 16,
+                    height: 1.6,
+            ),
+          ),
+                const SizedBox(height: 12),
+                    Text(
+                  'Track your own progress, earn badges for completing challenges, and see how you rank on the leaderboard!',
+                        style: TextStyle(
+                          color: colorScheme.onSurfaceVariant,
+                    fontSize: 16,
+                    height: 1.6,
+                      ),
+                    ),
+                const SizedBox(height: 30),
+                Row(
+                  children: [
+                    AppButton(
+                      text: 'Start Playing',
+                      variant: ButtonVariant.gradient,
+                      size: ButtonSize.medium,
+                      onPressed: () => GoRouter.of(context).go('/register'),
+                    ),
+                    const SizedBox(width: 16),
+                    AppButton(
+                      text: 'Explore More',
+                      variant: ButtonVariant.outline,
+                      size: ButtonSize.medium,
+                      onPressed: () => GoRouter.of(context).go('/for-students'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          if (!isSmallScreen) const SizedBox(width: 40),
+          if (!isSmallScreen)
+            Expanded(
+              flex: 5,
+              child: Container(
+                height: 400,
+                decoration: BoxDecoration(
+                  color: colorScheme.secondaryContainer.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Center(
+                  child: Icon(
+                    Icons.emoji_events,
+                    size: 120,
+                    color: colorScheme.secondary.withOpacity(0.5),
+                  ),
+                ),
+              ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildReadyToLevelUpSection(BuildContext context, bool isSmallScreen) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: isSmallScreen ? 20 : 80,
+        vertical: 60,
+      ),
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFFA855F7), Color(0xFF9333EA)],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
+      child: Column(
+        children: [
+          Text(
+            'Ready to Level Up Learning?',
+            style: TextStyle(
+              fontFamily: 'PixelifySans',
+              color: Colors.white,
+              fontSize: isSmallScreen ? 28 : 36,
+              fontWeight: FontWeight.bold,
+            ),
+          ).animate()
+           .fadeIn(duration: 600.ms),
+          const SizedBox(height: 16),
+          Text(
+            'Join thousands of teachers and students already transforming the classroom experience.',
+            style: const TextStyle(
+              fontFamily: 'Inter',
+              color: Colors.white,
+              fontSize: 18,
+              height: 1.6,
+            ),
+            textAlign: TextAlign.center,
+          ).animate()
+           .fadeIn(duration: 600.ms, delay: 200.ms),
           const SizedBox(height: 40),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: AppButton(
+                  text: 'Sign Up Free',
+                  variant: ButtonVariant.primary,
+                  size: ButtonSize.large,
+                  onPressed: () => GoRouter.of(context).go('/register'),
+                ),
+              ).animate()
+               .fadeIn(duration: 600.ms, delay: 400.ms),
+              const SizedBox(width: 16),
           AppButton(
-            text: 'View All Templates',
-            variant: ButtonVariant.primary,
+                text: 'Learn More',
+                variant: ButtonVariant.outline,
             size: ButtonSize.large,
             onPressed: () {},
+              ).animate()
+               .fadeIn(duration: 600.ms, delay: 600.ms),
+            ],
           ),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildHeroGraphics(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
+    return Container(
+      height: 320,
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          // Background grid
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: colorScheme.primary.withOpacity(0.2),
+                width: 2,
+            ),
+            ),
+          ).animate()
+           .fadeIn(duration: 800.ms, delay: 200.ms),
+          
+          // Game controller icon
+          Positioned(
+            top: 60,
+            child: Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: colorScheme.primary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: colorScheme.primary.withOpacity(0.3),
+                  width: 2,
+                ),
+              ),
+              child: Icon(
+                Icons.sports_esports,
+                size: 64,
+                color: colorScheme.primary,
+            ),
+            ),
+          ).animate()
+           .fadeIn(duration: 600.ms, delay: 600.ms)
+           .slideY(begin: -0.2, end: 0),
+          
+          // Trophy icon
+          Positioned(
+            bottom: 40,
+            left: 40,
+            child: Container(
+              padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                color: colorScheme.tertiary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: colorScheme.tertiary.withOpacity(0.3),
+                  width: 2,
+                    ),
+                ),
+              child: Icon(
+                Icons.emoji_events,
+                size: 32,
+                color: colorScheme.tertiary,
+                    ),
+            ),
+          ).animate()
+           .fadeIn(duration: 600.ms, delay: 1000.ms)
+           .slideX(begin: -0.2, end: 0),
+          
+          // Chart icon
+          Positioned(
+            top: 40,
+            right: 40,
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: colorScheme.secondary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: colorScheme.secondary.withOpacity(0.3),
+                  width: 2,
+                      ),
+                    ),
+              child: Icon(
+                Icons.bar_chart,
+                size: 28,
+                color: colorScheme.secondary,
+                ),
+              ),
+          ).animate()
+           .fadeIn(duration: 600.ms, delay: 800.ms)
+           .slideX(begin: 0.2, end: 0),
+          
+          // Book icon
+          Positioned(
+            bottom: 60,
+            right: 60,
+            child: Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                color: colorScheme.secondaryContainer.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: colorScheme.secondaryContainer.withOpacity(0.3),
+                  width: 2,
+                ),
+              ),
+              child: Icon(
+                Icons.menu_book,
+                size: 30,
+                color: colorScheme.secondaryContainer,
+                    ),
+                ),
+          ).animate()
+           .fadeIn(duration: 600.ms, delay: 1200.ms)
+           .slideY(begin: 0.2, end: 0),
         ],
       ),
     );
@@ -464,7 +830,7 @@ class HomePage extends StatelessWidget {
         horizontal: isSmallScreen ? 20 : 80,
         vertical: 60,
       ),
-      color: colorScheme.surfaceVariant.withOpacity(0.3),
+      color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -615,7 +981,7 @@ class HomePage extends StatelessWidget {
                                     ),
                                   ),
                                 );
-                              }).toList(),
+                              }),
                             ],
                           ),
                         ),
@@ -653,11 +1019,11 @@ class HomePage extends StatelessWidget {
                         ),
                       ),
                     );
-                  }).toList(),
+                  }),
                   const SizedBox(height: 24),
                 ],
               );
-            }).toList(),
+            }),
           ],
           const SizedBox(height: 40),
           Divider(color: colorScheme.outline.withOpacity(0.2)),

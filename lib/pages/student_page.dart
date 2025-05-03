@@ -2,45 +2,178 @@ import 'package:flutter/material.dart';
 import 'package:learn_play_level_up_flutter/components/navbar.dart';
 import 'package:learn_play_level_up_flutter/components/ui/button.dart';
 import 'package:learn_play_level_up_flutter/components/ui/card.dart';
+import 'package:learn_play_level_up_flutter/components/student/achievement_showcase.dart';
+import 'package:learn_play_level_up_flutter/components/student/trophy_case.dart';
+import 'package:learn_play_level_up_flutter/components/student/subject_progress.dart';
+import 'package:learn_play_level_up_flutter/components/student/game_progress.dart';
+import 'package:learn_play_level_up_flutter/components/student/weekly_schedule.dart';
+import 'package:learn_play_level_up_flutter/theme/app_theme.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class StudentPage extends StatefulWidget {
-  const StudentPage({Key? key}) : super(key: key);
+  const StudentPage({super.key});
 
   @override
   State<StudentPage> createState() => _StudentPageState();
 }
 
-class _StudentPageState extends State<StudentPage> with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-  bool _isLoading = false;
+class _StudentPageState extends State<StudentPage> {
+  bool _isLoading = true;
+  
+  // Mock data
+  final List<Map<String, dynamic>> _assignedGames = [
+    {
+      'title': 'Math Challenge',
+      'subject': 'Mathematics',
+      'icon': Icons.calculate,
+      'color': Colors.blue,
+      'dueDate': 'Oct 25',
+      'isNew': true,
+    },
+    {
+      'title': 'Vocabulary Quest',
+      'subject': 'Language Arts',
+      'icon': Icons.menu_book,
+      'color': Colors.purple,
+      'dueDate': 'Oct 28',
+    },
+    {
+      'title': 'Science Explorer',
+      'subject': 'Science',
+      'icon': Icons.science,
+      'color': Colors.green,
+      'isOverdue': true,
+      'dueDate': 'Oct 15',
+    },
+  ];
+  
+  final List<Map<String, dynamic>> _inProgressGames = [
+    {
+      'title': 'Math Challenge',
+      'progress': 0.75,
+      'lastPlayed': 'Yesterday',
+      'icon': Icons.calculate,
+      'color': Colors.blue,
+    },
+    {
+      'title': 'Vocabulary Quest',
+      'progress': 0.45,
+      'lastPlayed': '2 days ago',
+      'icon': Icons.menu_book,
+      'color': Colors.purple,
+    },
+  ];
+  
+  final List<Map<String, dynamic>> _subjects = [
+    {
+      'name': 'Mathematics',
+      'icon': Icons.calculate,
+      'color': Colors.blue,
+      'progress': 0.65,
+      'completedLessons': 13,
+      'totalLessons': 20,
+    },
+    {
+      'name': 'Language Arts',
+      'icon': Icons.menu_book,
+      'color': Colors.purple,
+      'progress': 0.35,
+      'completedLessons': 7,
+      'totalLessons': 20,
+    },
+    {
+      'name': 'Science',
+      'icon': Icons.science,
+      'color': Colors.green,
+      'progress': 0.1,
+      'completedLessons': 2,
+      'totalLessons': 20,
+    },
+  ];
+  
+  final List<Map<String, dynamic>> _achievements = [
+    {
+      'title': 'First Victory',
+      'description': 'Complete your first game',
+      'icon': Icons.emoji_events,
+      'date': 'Oct 10',
+    },
+    {
+      'title': 'Quick Learner',
+      'description': 'Answer 10 questions correctly in a row',
+      'icon': Icons.bolt,
+      'date': 'Oct 15',
+      'isNew': true,
+    },
+    {
+      'title': 'Math Wizard',
+      'description': 'Score 100% in a math game',
+      'icon': Icons.calculate,
+      'date': 'Yesterday',
+      'isNew': true,
+    },
+  ];
+  
+  final List<Map<String, dynamic>> _trophies = [
+    {
+      'title': 'Bronze Math',
+      'icon': Icons.calculate,
+      'level': 'LVL 1',
+    },
+    {
+      'title': 'Silver Reader',
+      'icon': Icons.menu_book,
+      'level': 'LVL 2',
+    },
+    {
+      'title': 'Gold Trophy',
+      'icon': Icons.emoji_events,
+      'level': 'LVL 3',
+      'isLocked': true,
+    },
+    {
+      'title': 'Expert',
+      'icon': Icons.science,
+      'level': 'LVL 5',
+      'isLocked': true,
+    },
+  ];
+  
+  final List<Map<String, dynamic>> _scheduleItems = [
+    {
+      'day': 0, // Monday
+      'time': '9 AM',
+      'icon': Icons.calculate,
+      'color': Colors.blue,
+      'title': 'Math Quiz',
+    },
+    {
+      'day': 2, // Wednesday
+      'time': '10 AM',
+      'icon': Icons.menu_book,
+      'color': Colors.purple,
+      'title': 'Vocabulary',
+    },
+    {
+      'day': 4, // Friday
+      'time': '2 PM', 
+      'icon': Icons.science,
+      'color': Colors.green,
+      'title': 'Science Lab',
+    },
+  ];
   
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
     
-    // Fetch student data, enrolled games, etc.
-    _fetchStudentData();
-  }
-  
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-  
-  Future<void> _fetchStudentData() async {
-    setState(() {
-      _isLoading = true;
-    });
-    
-    // TODO: Implement API calls to fetch student data
-    
-    // Simulate network delay
-    await Future.delayed(const Duration(seconds: 1));
-    
-    setState(() {
-      _isLoading = false;
+    // Simulate data fetching
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     });
   }
 
@@ -52,13 +185,17 @@ class _StudentPageState extends State<StudentPage> with SingleTickerProviderStat
     final isSmallScreen = size.width < 768;
 
     return Scaffold(
-      backgroundColor: colorScheme.background,
+      backgroundColor: colorScheme.surface,
       body: Column(
         children: [
           const Navbar(isAuthenticated: true, userRole: 'student'),
           Expanded(
             child: _isLoading
-                ? Center(child: CircularProgressIndicator())
+                ? Center(
+                    child: CircularProgressIndicator(
+                      color: colorScheme.primary,
+                    ),
+                  )
                 : _buildDashboardContent(context, isSmallScreen),
           ),
         ],
@@ -70,26 +207,65 @@ class _StudentPageState extends State<StudentPage> with SingleTickerProviderStat
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     
-    return Padding(
+    return SingleChildScrollView(
       padding: EdgeInsets.all(isSmallScreen ? 16 : 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Student Dashboard',
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: colorScheme.onBackground,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Track your progress, play games, and earn achievements',
-            style: TextStyle(
-              fontSize: 16,
-              color: colorScheme.onSurfaceVariant,
-            ),
+          // Header with welcome message
+          Row(
+            children: [
+              Container(
+                width: 64,
+                height: 64,
+                decoration: BoxDecoration(
+                  gradient: AppGradients.purpleToPink,
+                  shape: BoxShape.circle,
+                ),
+                child: Center(
+                  child: Text(
+                    'JS',
+                    style: TextStyle(
+                      fontFamily: 'PixelifySans',
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ).animate()
+               .fadeIn(duration: 600.ms)
+               .scale(begin: const Offset(0.8, 0.8), end: const Offset(1.0, 1.0)),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Welcome back, John!',
+                      style: TextStyle(
+                        fontFamily: 'PressStart2P',
+                        fontSize: 20,
+                        color: colorScheme.onSurface,
+                      ),
+                    ).animate()
+                     .fadeIn(duration: 600.ms, delay: 300.ms)
+                     .slideX(begin: 0.2, end: 0),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Ready to level up your learning today?',
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 16,
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ).animate()
+                     .fadeIn(duration: 600.ms, delay: 500.ms)
+                     .slideX(begin: 0.2, end: 0),
+                  ],
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 24),
           
@@ -101,9 +277,9 @@ class _StudentPageState extends State<StudentPage> with SingleTickerProviderStat
                 Expanded(
                   child: _buildStatCard(
                     context,
-                    'Games Played',
-                    '12',
-                    Icons.sports_esports,
+                    'XP Points',
+                    '1,250',
+                    Icons.stars,
                     colorScheme.primary,
                   ),
                 ),
@@ -111,9 +287,9 @@ class _StudentPageState extends State<StudentPage> with SingleTickerProviderStat
                 Expanded(
                   child: _buildStatCard(
                     context,
-                    'Total Score',
-                    '8,540',
-                    Icons.leaderboard,
+                    'Current Level',
+                    '8',
+                    Icons.trending_up,
                     colorScheme.secondary,
                   ),
                 ),
@@ -121,50 +297,58 @@ class _StudentPageState extends State<StudentPage> with SingleTickerProviderStat
                 Expanded(
                   child: _buildStatCard(
                     context,
-                    'Achievements',
-                    '8',
-                    Icons.emoji_events,
-                    colorScheme.tertiary,
+                    'Streak',
+                    '5 days',
+                    Icons.local_fire_department,
+                    Colors.orange,
                   ),
                 ),
               ],
-            ),
+            ).animate()
+             .fadeIn(duration: 600.ms, delay: 600.ms),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 32),
           
-          // Tab Bar
-          Container(
-            decoration: BoxDecoration(
-              color: colorScheme.surface,
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: colorScheme.outline.withOpacity(0.1)),
-            ),
-            child: TabBar(
-              controller: _tabController,
-              labelColor: colorScheme.primary,
-              unselectedLabelColor: colorScheme.onSurfaceVariant,
-              indicatorColor: colorScheme.primary,
-              indicatorSize: TabBarIndicatorSize.tab,
-              tabs: const [
-                Tab(text: 'My Games'),
-                Tab(text: 'Achievements'),
-                Tab(text: 'Performance'),
-              ],
-            ),
-          ),
-          const SizedBox(height: 24),
+          // Game Progress Section (Assigned and In-Progress Games)
+          GameProgress(
+            assignedGames: _assignedGames,
+            inProgressGames: _inProgressGames,
+            isLoading: false,
+          ).animate()
+           .fadeIn(duration: 600.ms, delay: 800.ms),
+          const SizedBox(height: 32),
           
-          // Tab Content
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                _buildMyGamesTab(context),
-                _buildAchievementsTab(context),
-                _buildPerformanceTab(context),
-              ],
-            ),
-          ),
+          // Trophy Case
+          TrophyCase(
+            trophies: _trophies,
+            isLoading: false,
+          ).animate()
+           .fadeIn(duration: 600.ms, delay: 1000.ms),
+          const SizedBox(height: 32),
+          
+          // Subject Progress
+          SubjectProgress(
+            subjects: _subjects,
+            isLoading: false,
+          ).animate()
+           .fadeIn(duration: 600.ms, delay: 1200.ms),
+          const SizedBox(height: 32),
+          
+          // Achievements
+          AchievementShowcase(
+            achievements: _achievements,
+            isLoading: false,
+          ).animate()
+           .fadeIn(duration: 600.ms, delay: 1400.ms),
+          const SizedBox(height: 32),
+          
+          // Weekly Schedule
+          WeeklySchedule(
+            scheduleItems: _scheduleItems,
+            isLoading: false,
+          ).animate()
+           .fadeIn(duration: 600.ms, delay: 1600.ms),
+          const SizedBox(height: 32),
         ],
       ),
     );
@@ -177,6 +361,11 @@ class _StudentPageState extends State<StudentPage> with SingleTickerProviderStat
     return AppCard(
       padding: const EdgeInsets.all(16),
       backgroundColor: color.withOpacity(0.1),
+      borderRadius: BorderRadius.circular(16),
+      border: Border.all(
+        color: color.withOpacity(0.3),
+        width: 2,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -206,8 +395,8 @@ class _StudentPageState extends State<StudentPage> with SingleTickerProviderStat
           Text(
             value,
             style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+              fontFamily: 'PressStart2P',
+              fontSize: 20,
               color: colorScheme.onSurface,
             ),
           ),
@@ -215,393 +404,10 @@ class _StudentPageState extends State<StudentPage> with SingleTickerProviderStat
           Text(
             title,
             style: TextStyle(
+              fontFamily: 'Inter',
               fontSize: 14,
               color: colorScheme.onSurfaceVariant,
             ),
-          ),
-        ],
-      ),
-    );
-  }
-  
-  Widget _buildMyGamesTab(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    
-    // Mock data for enrolled games
-    final enrolledGames = [
-      {
-        'title': 'Math Challenge',
-        'progress': 0.75,
-        'lastPlayed': 'Yesterday',
-        'image': Icons.calculate,
-        'color': colorScheme.primary,
-      },
-      {
-        'title': 'Vocabulary Quest',
-        'progress': 0.45,
-        'lastPlayed': '2 days ago',
-        'image': Icons.menu_book,
-        'color': colorScheme.secondary,
-      },
-      {
-        'title': 'Science Explorer',
-        'progress': 0.2,
-        'lastPlayed': 'Last week',
-        'image': Icons.science,
-        'color': colorScheme.tertiary,
-      },
-    ];
-    
-    if (enrolledGames.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.sports_esports_outlined,
-              size: 64,
-              color: colorScheme.onSurfaceVariant.withOpacity(0.5),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'No games enrolled yet',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: colorScheme.onSurface,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Browse available games and start playing',
-              style: TextStyle(
-                fontSize: 14,
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: 24),
-            AppButton(
-              text: 'Browse Games',
-              variant: ButtonVariant.primary,
-              leadingIcon: Icons.search,
-              onPressed: () {},
-            ),
-          ],
-        ),
-      );
-    }
-    
-    return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-        childAspectRatio: 1.2,
-      ),
-      itemCount: enrolledGames.length,
-      itemBuilder: (context, index) {
-        final game = enrolledGames[index];
-        
-        return AppCard(
-          onTap: () {},
-          isHoverable: true,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: (game['color'] as Color).withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Icon(
-                      game['image'] as IconData,
-                      color: game['color'] as Color,
-                      size: 24,
-                    ),
-                  ),
-                  const Spacer(),
-                  PopupMenuButton(
-                    icon: Icon(
-                      Icons.more_vert,
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-                    itemBuilder: (context) => [
-                      const PopupMenuItem(
-                        value: 'play',
-                        child: Row(
-                          children: [
-                            Icon(Icons.play_arrow),
-                            SizedBox(width: 8),
-                            Text('Play'),
-                          ],
-                        ),
-                      ),
-                      const PopupMenuItem(
-                        value: 'details',
-                        child: Row(
-                          children: [
-                            Icon(Icons.info_outline),
-                            SizedBox(width: 8),
-                            Text('Details'),
-                          ],
-                        ),
-                      ),
-                    ],
-                    onSelected: (value) {},
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Text(
-                game['title'] as String,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: colorScheme.onSurface,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Last played: ${game['lastPlayed']}',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: colorScheme.onSurfaceVariant,
-                ),
-              ),
-              const SizedBox(height: 16),
-              LinearProgressIndicator(
-                value: game['progress'] as double,
-                backgroundColor: colorScheme.outline.withOpacity(0.2),
-                valueColor: AlwaysStoppedAnimation<Color>(game['color'] as Color),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Progress: ${((game['progress'] as double) * 100).toInt()}%',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: colorScheme.onSurfaceVariant,
-                ),
-              ),
-              const Spacer(),
-              AppButton(
-                text: 'Continue',
-                variant: ButtonVariant.primary,
-                size: ButtonSize.small,
-                isFullWidth: true,
-                onPressed: () {},
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-  
-  Widget _buildAchievementsTab(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    
-    // Mock data for achievements
-    final achievements = [
-      {
-        'title': 'First Victory',
-        'description': 'Complete your first game',
-        'icon': Icons.emoji_events,
-        'earned': true,
-        'date': '2023-09-10',
-      },
-      {
-        'title': 'Quick Learner',
-        'description': 'Answer 10 questions correctly in a row',
-        'icon': Icons.bolt,
-        'earned': true,
-        'date': '2023-09-15',
-      },
-      {
-        'title': 'Math Wizard',
-        'description': 'Score 100% in a math game',
-        'icon': Icons.calculate,
-        'earned': true,
-        'date': '2023-10-02',
-      },
-      {
-        'title': 'Science Expert',
-        'description': 'Complete all levels in Science Explorer',
-        'icon': Icons.science,
-        'earned': false,
-        'date': null,
-      },
-      {
-        'title': 'Vocabulary Master',
-        'description': 'Learn 100 new words',
-        'icon': Icons.menu_book,
-        'earned': false,
-        'date': null,
-      },
-    ];
-    
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Your Achievements',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            color: colorScheme.onSurface,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          'You have earned ${achievements.where((a) => a['earned'] as bool).length} out of ${achievements.length} achievements',
-          style: TextStyle(
-            fontSize: 14,
-            color: colorScheme.onSurfaceVariant,
-          ),
-        ),
-        const SizedBox(height: 24),
-        Expanded(
-          child: ListView.builder(
-            itemCount: achievements.length,
-            itemBuilder: (context, index) {
-              final achievement = achievements[index];
-              final isEarned = achievement['earned'] as bool;
-              
-              return Container(
-                margin: const EdgeInsets.only(bottom: 16),
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: isEarned 
-                      ? colorScheme.surfaceVariant.withOpacity(0.3)
-                      : colorScheme.surfaceVariant.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: isEarned
-                        ? colorScheme.primary.withOpacity(0.2)
-                        : colorScheme.outline.withOpacity(0.1),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(12),
-                      decoration: BoxDecoration(
-                        color: isEarned
-                            ? colorScheme.primary.withOpacity(0.1)
-                            : colorScheme.surfaceVariant.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Icon(
-                        achievement['icon'] as IconData,
-                        color: isEarned
-                            ? colorScheme.primary
-                            : colorScheme.onSurfaceVariant.withOpacity(0.5),
-                        size: 28,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            achievement['title'] as String,
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                              color: colorScheme.onSurface,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            achievement['description'] as String,
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: colorScheme.onSurfaceVariant,
-                            ),
-                          ),
-                          if (isEarned && achievement['date'] != null) ...[
-                            const SizedBox(height: 8),
-                            Text(
-                              'Earned on: ${achievement['date']}',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: colorScheme.primary,
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: isEarned
-                            ? colorScheme.primary
-                            : colorScheme.surfaceVariant.withOpacity(0.3),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Icon(
-                          isEarned ? Icons.check : Icons.lock_outline,
-                          color: isEarned
-                              ? colorScheme.onPrimary
-                              : colorScheme.onSurfaceVariant.withOpacity(0.5),
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-  
-  Widget _buildPerformanceTab(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.bar_chart,
-            size: 64,
-            color: colorScheme.onSurfaceVariant.withOpacity(0.5),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Performance Analytics',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: colorScheme.onSurface,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Charts and visualizations coming soon...',
-            style: TextStyle(
-              fontSize: 14,
-              color: colorScheme.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 24),
-          AppButton(
-            text: 'View Basic Stats',
-            variant: ButtonVariant.outline,
-            onPressed: () {},
           ),
         ],
       ),

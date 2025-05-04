@@ -14,7 +14,7 @@ class AchievementBadge extends StatefulWidget {
   final String? tooltipMessage;
 
   const AchievementBadge({
-    Key? key,
+    super.key,
     required this.title,
     required this.icon,
     this.color,
@@ -24,7 +24,7 @@ class AchievementBadge extends StatefulWidget {
     this.size = 80.0,
     this.onTap,
     this.tooltipMessage,
-  }) : super(key: key);
+  });
 
   @override
   State<AchievementBadge> createState() => _AchievementBadgeState();
@@ -265,7 +265,7 @@ class AchievementBadgeGrid extends StatelessWidget {
   final VoidCallback? onSeeAllPressed;
 
   const AchievementBadgeGrid({
-    Key? key,
+    super.key,
     required this.badges,
     this.title = 'Achievements',
     this.subtitle,
@@ -273,7 +273,7 @@ class AchievementBadgeGrid extends StatelessWidget {
     this.spacing = 16.0,
     this.showLabels = true,
     this.onSeeAllPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

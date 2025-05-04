@@ -221,7 +221,7 @@ class WeeklySchedule extends StatelessWidget {
                 ),
               ).animate()
                 .fadeIn(duration: 300.ms, delay: Duration(milliseconds: 100 * dayIndex));
-            }).toList(),
+            }),
             
             // Add placeholder if no items
             if (items.isEmpty)

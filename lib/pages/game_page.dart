@@ -306,7 +306,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
         children: [
           Column(
             children: [
-              const Navbar(isAuthenticated: true),
+              const Navbar(isAuthenticated: true, isInternal: true),
               Expanded(
                 child: _isLoading
                     ? const Center(child: CircularProgressIndicator())
@@ -1036,7 +1036,7 @@ class _GamePageState extends State<GamePage> with TickerProviderStateMixin {
     final colorScheme = theme.colorScheme;
     
     return Container(
-      color: colorScheme.background.withOpacity(0.9),
+      color: colorScheme.surface.withOpacity(0.9),
       child: Center(
         child: Container(
           margin: const EdgeInsets.all(32),

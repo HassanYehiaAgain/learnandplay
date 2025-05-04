@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:learn_play_level_up_flutter/theme/app_theme.dart';
+import 'package:learn_play_level_up_flutter/theme/app_gradients.dart' as gradients;
+import 'package:google_fonts/google_fonts.dart';
 
 enum ButtonVariant {
   primary,
@@ -15,6 +17,181 @@ enum ButtonSize {
   small,
   medium,
   large,
+}
+
+/// A custom button component with various styles and configurations
+class Button extends StatelessWidget {
+  final String text;
+  final VoidCallback? onPressed;
+  final ButtonStyle? style;
+  final bool isLoading;
+  final bool isGradient;
+  final IconData? icon;
+  final bool isFullWidth;
+  final ButtonType type;
+  final Color? backgroundColor;
+  final Color? textColor;
+  final bool hasShadow;
+  final double? height;
+  
+  const Button({
+    super.key,
+    required this.text,
+    required this.onPressed,
+    this.style,
+    this.isLoading = false,
+    this.isGradient = false,
+    this.icon,
+    this.isFullWidth = false,
+    this.type = ButtonType.primary,
+    this.backgroundColor,
+    this.textColor,
+    this.hasShadow = true,
+    this.height,
+  });
+  
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
+    // Determine colors based on type
+    Color bgColor = backgroundColor ?? _getBackgroundColor(colorScheme);
+    Color txtColor = textColor ?? _getTextColor(colorScheme, bgColor);
+    
+    // Determine gradient based on type
+    LinearGradient? gradient;
+    if (isGradient) {
+      gradient = _getGradient();
+    }
+    
+    // Create widget based on parameters
+    Widget buttonContent = Row(
+      mainAxisSize: isFullWidth ? MainAxisSize.max : MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        if (icon != null) ...[
+          Icon(icon, color: txtColor, size: 18),
+          const SizedBox(width: 8),
+        ],
+        if (isLoading)
+          SizedBox(
+            width: 18,
+            height: 18,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor: AlwaysStoppedAnimation<Color>(txtColor),
+            ),
+          )
+        else
+          Text(
+            text,
+            style: theme.textTheme.labelMedium?.copyWith(
+              color: txtColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+      ],
+    );
+    
+    // Create button container
+    Widget buttonContainer = Container(
+      height: height ?? 48,
+      constraints: BoxConstraints(
+        minWidth: isFullWidth ? double.infinity : 120,
+      ),
+      decoration: BoxDecoration(
+        gradient: gradient,
+        color: gradient == null ? bgColor : null,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: hasShadow
+            ? [
+                BoxShadow(
+                  color: colorScheme.shadow,
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ]
+            : null,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: isLoading ? null : onPressed,
+          borderRadius: BorderRadius.circular(12),
+          splashColor: txtColor.withOpacity(0.1),
+          highlightColor: txtColor.withOpacity(0.05),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: buttonContent,
+            ),
+          ),
+        ),
+      ),
+    );
+    
+    return buttonContainer;
+  }
+  
+  Color _getBackgroundColor(ColorScheme colorScheme) {
+    switch (type) {
+      case ButtonType.primary:
+        return colorScheme.primary;
+      case ButtonType.secondary:
+        return colorScheme.secondary;
+      case ButtonType.tertiary:
+        return colorScheme.tertiary;
+      case ButtonType.error:
+        return colorScheme.error;
+      case ButtonType.outline:
+        return Colors.transparent;
+      case ButtonType.text:
+        return Colors.transparent;
+    }
+  }
+  
+  Color _getTextColor(ColorScheme colorScheme, Color bgColor) {
+    switch (type) {
+      case ButtonType.primary:
+        return colorScheme.onPrimary;
+      case ButtonType.secondary:
+        return colorScheme.onSecondary;
+      case ButtonType.tertiary:
+        return colorScheme.onTertiary;
+      case ButtonType.error:
+        return colorScheme.onError;
+      case ButtonType.outline:
+        return colorScheme.primary;
+      case ButtonType.text:
+        return colorScheme.primary;
+    }
+  }
+  
+  LinearGradient? _getGradient() {
+    switch (type) {
+      case ButtonType.primary:
+        return gradients.AppGradients.purpleToPink;
+      case ButtonType.secondary:
+        return gradients.AppGradients.blueToCyan;
+      case ButtonType.tertiary:
+        return gradients.AppGradients.orangeToYellow;
+      case ButtonType.error:
+        return gradients.AppGradients.redToOrange;
+      default:
+        return null;
+    }
+  }
+}
+
+/// Different button types for the application
+enum ButtonType {
+  primary,
+  secondary,
+  tertiary,
+  error,
+  outline,
+  text,
 }
 
 class AppButton extends StatelessWidget {
@@ -189,7 +366,7 @@ class AppButton extends StatelessWidget {
       return GradientButton(
         text: text,
         onPressed: isDisabled || isLoading ? null : onPressed,
-        gradient: AppGradients.purpleToPink,
+        gradient: gradients.AppGradients.purpleToPink,
         size: size,
         isFullWidth: isFullWidth,
         leadingIcon: leadingIcon,
@@ -265,8 +442,7 @@ class GradientButton extends StatelessWidget {
           ],
           Text(
             text,
-            style: TextStyle(
-              fontFamily: 'PixelifySans',
+            style: GoogleFonts.vt323(
               fontSize: fontSize,
               fontWeight: FontWeight.bold,
               color: Colors.white,

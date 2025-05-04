@@ -41,10 +41,7 @@ class _SignInPageState extends State<SignInPage> {
     });
     
     try {
-      // Get the AuthService instance
       final authService = Provider.of<AuthService>(context, listen: false);
-      
-      // Call the sign in method
       final success = await authService.signIn(
         _emailController.text,
         _passwordController.text,
@@ -53,22 +50,24 @@ class _SignInPageState extends State<SignInPage> {
       if (!mounted) return;
       
       if (success) {
-        // Login successful, navigate to dashboard based on user role
-        if (authService.currentUser?.role == 'teacher') {
-          GoRouter.of(context).go('/teacher/dashboard');
-        } else {
-          GoRouter.of(context).go('/student/dashboard');
+        final user = authService.currentUser;
+        if (user != null) {
+          if (user.role == 'teacher') {
+            GoRouter.of(context).go('/teacher/dashboard');
+          } else {
+            GoRouter.of(context).go('/student/dashboard');
+          }
         }
       } else {
-        // Login failed, show the error message from auth service
+        final errorMsg = authService.error;
         setState(() {
-          _errorMessage = authService.error ?? 'Failed to sign in. Please check your credentials.';
+          _errorMessage = _getFormattedErrorMessage(errorMsg ?? 'Sign in failed. Please check your credentials and try again.');
         });
       }
     } catch (e) {
       if (mounted) {
         setState(() {
-          _errorMessage = 'Sign in error: $e';
+          _errorMessage = _getFormattedErrorMessage('$e');
         });
       }
     } finally {
@@ -78,6 +77,24 @@ class _SignInPageState extends State<SignInPage> {
         });
       }
     }
+  }
+  
+  String _getFormattedErrorMessage(String error) {
+    // Parse Firebase error messages and make them more user-friendly
+    if (error.contains('user-not-found')) {
+      return 'No user found with this email. Please check your email or create a new account.';
+    } else if (error.contains('wrong-password')) {
+      return 'Incorrect password. Please try again or reset your password.';
+    } else if (error.contains('invalid-email')) {
+      return 'Invalid email format. Please enter a valid email address.';
+    } else if (error.contains('too-many-requests')) {
+      return 'Too many failed login attempts. Please try again later or reset your password.';
+    } else if (error.contains('network-request-failed')) {
+      return 'Network error. Please check your internet connection and try again.';
+    } else if (error.contains('email-already-in-use')) {
+      return 'This email is already in use. Please sign in or use a different email.';
+    }
+    return error;
   }
 
   @override

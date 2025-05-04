@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:learn_play_level_up_flutter/components/navbar.dart';
 import 'package:learn_play_level_up_flutter/components/ui/button.dart';
-import 'package:learn_play_level_up_flutter/components/ui/card.dart';
 import 'package:learn_play_level_up_flutter/theme/app_theme.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
@@ -20,7 +19,7 @@ class HomePage extends StatelessWidget {
       backgroundColor: colorScheme.surface,
       body: Column(
         children: [
-          const Navbar(isAuthenticated: false),
+          const Navbar(isAuthenticated: false, isInternal: true),
           Expanded(
             child: SingleChildScrollView(
               child: Column(
@@ -37,9 +36,6 @@ class HomePage extends StatelessWidget {
                   
                   // Student Section
                   _buildStudentSection(context, isSmallScreen),
-                  
-                  // Ready to Level Up Section
-                  _buildReadyToLevelUpSection(context, isSmallScreen),
                   
                   // Footer
                   _buildFooter(context, isSmallScreen),
@@ -92,7 +88,7 @@ class HomePage extends StatelessWidget {
                           ),
                         ),
                         child: Text(
-                          'Welcome to Learn & Play',
+                          'Join Our Growing Community',
                         style: TextStyle(
                           fontFamily: 'PressStart2P',
                           color: colorScheme.onSurface,
@@ -115,7 +111,7 @@ class HomePage extends StatelessWidget {
                           ),
                         ),
                         child: Text(
-                          'Transform your classroom',
+                          'Join thousands of teachers...',
                         style: TextStyle(
                           fontFamily: 'PressStart2P',
                             color: colorScheme.secondary,
@@ -138,7 +134,7 @@ class HomePage extends StatelessWidget {
                           ),
                         ),
                         child: Text(
-                          'Transform classroom education into exciting adventures! A platform combines learning with play, helping students engage with subjects through interactive games, challenges, and rewards.',
+                          'An interactive platform where teachers create educational games and students learn while having fun. Personalized learning meets gamification for an experience that makes education exciting!',
                         style: TextStyle(
                             fontFamily: 'PixelifySans',
                           color: colorScheme.onSurfaceVariant,
@@ -176,7 +172,7 @@ class HomePage extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        'Welcome to Learn & Play',
+                        'Join Our Growing Community',
                       style: TextStyle(
                         fontFamily: 'PressStart2P',
                         color: colorScheme.onSurface,
@@ -199,7 +195,7 @@ class HomePage extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        'Transform your classroom',
+                        'Join thousands of teachers...',
                       style: TextStyle(
                         fontFamily: 'PressStart2P',
                           color: colorScheme.secondary,
@@ -222,7 +218,7 @@ class HomePage extends StatelessWidget {
                         ),
                       ),
                       child: Text(
-                        'Transform classroom education into exciting adventures! A platform combines learning with play, helping students engage with subjects through interactive games, challenges, and rewards.',
+                        'An interactive platform where teachers create educational games and students learn while having fun. Personalized learning meets gamification for an experience that makes education exciting!',
                       style: TextStyle(
                           fontFamily: 'PixelifySans',
                         color: colorScheme.onSurfaceVariant,
@@ -275,7 +271,7 @@ class HomePage extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            'Core Features',
+            'How It Works',
             style: TextStyle(
               fontFamily: 'PixelifySans',
               color: colorScheme.onSurface,
@@ -286,7 +282,7 @@ class HomePage extends StatelessWidget {
            .fadeIn(duration: 600.ms),
           const SizedBox(height: 16),
           Text(
-            'Our platform offers powerful tools for both teachers and students to enhance the educational experience',
+            'Our simple 3-step process makes educational gaming accessible for everyone',
             style: TextStyle(
               fontFamily: 'Inter',
               color: colorScheme.onSurfaceVariant,
@@ -302,28 +298,28 @@ class HomePage extends StatelessWidget {
           isSmallScreen 
             ? Column(
             children: [
-                  _buildFeatureCard(
+                  _buildProcessCard(
                 context,
-                    icon: Icons.emoji_events,
-                    iconColor: AppTheme.purple,
-                    title: 'Gamified Learning',
-                    description: 'Transform traditional lessons into exciting game experiences that students love to play.',
+                    icon: Icons.create,
+                    iconColor: colorScheme.primary,
+                    title: '1. Teachers Create Games',
+                    description: 'Educators design custom educational games tailored to their curriculum and learning objectives.',
               ),
                   const SizedBox(height: 24),
-                  _buildFeatureCard(
+                  _buildProcessCard(
                 context,
-                    icon: Icons.bar_chart,
-                    iconColor: AppTheme.teal,
-                    title: 'Comprehensive Analytics',
-                    description: 'Track student progress and identify areas where additional support might be needed.',
+                    icon: Icons.sports_esports,
+                    iconColor: colorScheme.primary,
+                    title: '2. Students Play & Learn',
+                    description: 'Students engage with the interactive games, mastering concepts while having fun and earning rewards.',
                   ),
                   const SizedBox(height: 24),
-                  _buildFeatureCard(
+                  _buildProcessCard(
                 context,
-                    icon: Icons.verified,
-                    iconColor: AppTheme.green,
-                    title: 'Achievement System',
-                    description: 'Motivate students with badges, trophies, and rewards for their accomplishments.',
+                    icon: Icons.bar_chart,
+                    iconColor: colorScheme.primary,
+                    title: '3. Everyone Tracks Progress',
+                    description: 'Both teachers and students monitor learning achievements and identify areas for improvement.',
                   ),
                 ],
               ).animate()
@@ -332,32 +328,32 @@ class HomePage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
-                    child: _buildFeatureCard(
+                    child: _buildProcessCard(
                       context,
-                      icon: Icons.emoji_events,
-                      iconColor: AppTheme.purple,
-                      title: 'Gamified Learning',
-                      description: 'Transform traditional lessons into exciting game experiences that students love to play.',
+                      icon: Icons.create,
+                      iconColor: colorScheme.primary,
+                      title: '1. Teachers Create Games',
+                      description: 'Educators design custom educational games tailored to their curriculum and learning objectives.',
                     ),
                   ),
                   const SizedBox(width: 24),
                   Expanded(
-                    child: _buildFeatureCard(
+                    child: _buildProcessCard(
+                      context,
+                      icon: Icons.sports_esports,
+                      iconColor: colorScheme.primary,
+                      title: '2. Students Play & Learn',
+                      description: 'Students engage with the interactive games, mastering concepts while having fun and earning rewards.',
+                    ),
+                  ),
+                  const SizedBox(width: 24),
+                  Expanded(
+                    child: _buildProcessCard(
                       context,
                       icon: Icons.bar_chart,
-                      iconColor: AppTheme.teal,
-                      title: 'Comprehensive Analytics',
-                      description: 'Track student progress and identify areas where additional support might be needed.',
-                    ),
-                  ),
-                  const SizedBox(width: 24),
-                  Expanded(
-                    child: _buildFeatureCard(
-                      context,
-                      icon: Icons.verified,
-                      iconColor: AppTheme.green,
-                      title: 'Achievement System',
-                      description: 'Motivate students with badges, trophies, and rewards for their accomplishments.',
+                      iconColor: colorScheme.primary,
+                      title: '3. Everyone Tracks Progress',
+                      description: 'Both teachers and students monitor learning achievements and identify areas for improvement.',
                     ),
               ),
             ],
@@ -368,7 +364,7 @@ class HomePage extends StatelessWidget {
     );
   }
   
-  Widget _buildFeatureCard(BuildContext context, {
+  Widget _buildProcessCard(BuildContext context, {
     required IconData icon,
     required Color iconColor,
     required String title,
@@ -477,7 +473,7 @@ class HomePage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                 Text(
-                  'For Teachers',
+                  'Empower Your Teaching',
                   style: TextStyle(
                     fontFamily: 'PixelifySans',
                         color: colorScheme.primary,
@@ -486,35 +482,44 @@ class HomePage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    Text(
-                  'Create interactive educational games tailored to your curriculum. Design engaging quizzes, interactive puzzles, and memory games to reinforce learning concepts.',
-                      style: TextStyle(
-                    color: colorScheme.onSurfaceVariant,
-                    fontSize: 16,
-                    height: 1.6,
-                      ),
+                    
+                    // Benefit items
+                    _buildBenefitItem(
+                      context,
+                      icon: Icons.admin_panel_settings,
+                      text: 'Create custom educational games in minutes with easy templates'
                     ),
-                const SizedBox(height: 12),
-                    Text(
-                  'Track student progress, view detailed analytics, and understand where your students excel or need additional support.',
-                      style: TextStyle(
-                        color: colorScheme.onSurfaceVariant,
-                    fontSize: 16,
-                    height: 1.6,
-                  ),
-                ),
+                    const SizedBox(height: 12),
+                    _buildBenefitItem(
+                      context,
+                      icon: Icons.insights,
+                      text: 'Track student progress with comprehensive analytics'
+                    ),
+                    const SizedBox(height: 12),
+                    _buildBenefitItem(
+                      context,
+                      icon: Icons.event_available,
+                      text: 'Assign games with specific due dates for better organization'
+                    ),
+                    const SizedBox(height: 12),
+                    _buildBenefitItem(
+                      context,
+                      icon: Icons.dashboard_customize,
+                      text: 'Manage multiple subjects and grade years from one dashboard'
+                    ),
+                    
                 const SizedBox(height: 30),
                 Row(
                   children: [
                     AppButton(
-                      text: 'Get Started',
+                      text: 'Teacher Sign Up',
                       variant: ButtonVariant.gradient,
                       size: ButtonSize.medium,
                       onPressed: () => GoRouter.of(context).go('/register'),
                       ),
                     const SizedBox(width: 16),
                     AppButton(
-                      text: 'Explore More',
+                      text: 'Learn More',
                       variant: ButtonVariant.outline,
                       size: ButtonSize.medium,
                       onPressed: () => GoRouter.of(context).go('/for-teachers'),
@@ -526,6 +531,40 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+  
+  Widget _buildBenefitItem(BuildContext context, {required IconData icon, required String text}) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: colorScheme.primary.withOpacity(0.1),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            icon,
+            color: colorScheme.primary,
+            size: 24,
+          ),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Text(
+            text,
+            style: TextStyle(
+              fontFamily: 'Inter',
+              color: colorScheme.onSurfaceVariant,
+              fontSize: 16,
+              height: 1.5,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -548,44 +587,53 @@ class HomePage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-                  'For Students',
+                  'Learning That Feels Like Play',
             style: TextStyle(
                     fontFamily: 'PixelifySans',
-                    color: colorScheme.secondary,
+                    color: colorScheme.primary,
                     fontSize: isSmallScreen ? 28 : 32,
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 16),
-          Text(
-                  'Learn through fun and engaging games designed by your teachers. Master new concepts while collecting achievements and competing with classmates.',
-            style: TextStyle(
-              color: colorScheme.onSurfaceVariant,
-              fontSize: 16,
-                    height: 1.6,
-            ),
+          
+          // Benefit items
+          _buildBenefitItem(
+            context,
+            icon: Icons.school,
+            text: 'Master new concepts through fun interactive games'
           ),
-                const SizedBox(height: 12),
-                    Text(
-                  'Track your own progress, earn badges for completing challenges, and see how you rank on the leaderboard!',
-                        style: TextStyle(
-                          color: colorScheme.onSurfaceVariant,
-                    fontSize: 16,
-                    height: 1.6,
-                      ),
-                    ),
+          const SizedBox(height: 12),
+          _buildBenefitItem(
+            context,
+            icon: Icons.emoji_events,
+            text: 'Earn XP, badges, and rewards for your achievements'
+          ),
+          const SizedBox(height: 12),
+          _buildBenefitItem(
+            context,
+            icon: Icons.trending_up,
+            text: 'Track your progress and compete on leaderboards'
+          ),
+          const SizedBox(height: 12),
+          _buildBenefitItem(
+            context,
+            icon: Icons.assignment_turned_in,
+            text: 'Access games assigned by your teachers in one place'
+          ),
+                
                 const SizedBox(height: 30),
                 Row(
                   children: [
                     AppButton(
-                      text: 'Start Playing',
+                      text: 'Student Sign Up',
                       variant: ButtonVariant.gradient,
                       size: ButtonSize.medium,
                       onPressed: () => GoRouter.of(context).go('/register'),
                     ),
                     const SizedBox(width: 16),
                     AppButton(
-                      text: 'Explore More',
+                      text: 'Learn More',
                       variant: ButtonVariant.outline,
                       size: ButtonSize.medium,
                       onPressed: () => GoRouter.of(context).go('/for-students'),
@@ -602,14 +650,14 @@ class HomePage extends StatelessWidget {
               child: Container(
                 height: 400,
                 decoration: BoxDecoration(
-                  color: colorScheme.secondaryContainer.withOpacity(0.2),
+                  color: colorScheme.primaryContainer.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Center(
                   child: Icon(
                     Icons.emoji_events,
                     size: 120,
-                    color: colorScheme.secondary.withOpacity(0.5),
+                    color: colorScheme.primary.withOpacity(0.5),
                   ),
                 ),
               ),
@@ -630,7 +678,7 @@ class HomePage extends StatelessWidget {
       ),
       decoration: const BoxDecoration(
         gradient: LinearGradient(
-          colors: [Color(0xFFA855F7), Color(0xFF9333EA)],
+          colors: [Color(0xFF2BBEAA), Color(0xFF1A8F84)],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
         ),
@@ -815,14 +863,35 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _buildFooter(BuildContext context, bool isSmallScreen) {
+  Widget _buildGameShowcaseSection(BuildContext context, bool isSmallScreen) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     
-    final footerLinks = [
-      {'title': 'About Us', 'links': ['Our Story', 'Team', 'Careers', 'Press']},
-      {'title': 'Resources', 'links': ['Blog', 'Help Center', 'Contact Us', 'FAQ']},
-      {'title': 'Legal', 'links': ['Terms of Service', 'Privacy Policy', 'Cookie Policy']},
+    final games = [
+      {
+        'title': 'Quiz Games',
+        'description': 'Test knowledge with engaging multiple-choice questions',
+        'icon': Icons.help_outline,
+        'color': colorScheme.primary,
+      },
+      {
+        'title': 'Matching Games',
+        'description': 'Connect related concepts and build association skills',
+        'icon': Icons.grid_view,
+        'color': colorScheme.primary,
+      },
+      {
+        'title': 'Word Scramble',
+        'description': 'Strengthen vocabulary and spelling through word games',
+        'icon': Icons.text_fields,
+        'color': colorScheme.primary,
+      },
+      {
+        'title': 'Memory Games',
+        'description': 'Improve retention and recall with pattern recognition',
+        'icon': Icons.psychology,
+        'color': colorScheme.primary,
+      },
     ];
     
     return Container(
@@ -830,206 +899,291 @@ class HomePage extends StatelessWidget {
         horizontal: isSmallScreen ? 20 : 80,
         vertical: 60,
       ),
-      color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
+      color: colorScheme.surface,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (!isSmallScreen)
-                Expanded(
-                  flex: 4,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: colorScheme.primary,
-                            ),
-                            child: Icon(
-                              Icons.gamepad,
-                              color: colorScheme.onPrimary,
-                              size: 24,
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Text(
-                            'Learn, Play, Level Up',
-                            style: TextStyle(
-                              color: colorScheme.onSurface,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        'Transforming education through interactive game-based learning experiences that engage students and empower teachers.',
-                        style: TextStyle(
-                          color: colorScheme.onSurfaceVariant,
-                          fontSize: 14,
-                          height: 1.6,
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      Row(
-                        children: [
-                          _buildSocialIcon(context, Icons.facebook, () {}),
-                          const SizedBox(width: 12),
-                          _buildSocialIcon(context, Icons.public, () {}),
-                          const SizedBox(width: 12),
-                          _buildSocialIcon(context, Icons.business_center, () {}),
-                          const SizedBox(width: 12),
-                          _buildSocialIcon(context, Icons.video_library, () {}),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              if (isSmallScreen) ...[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            color: colorScheme.primary,
-                          ),
-                          child: Icon(
-                            Icons.gamepad,
-                            color: colorScheme.onPrimary,
-                            size: 24,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Text(
-                          'Learn, Play, Level Up',
-                          style: TextStyle(
-                            color: colorScheme.onSurface,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      'Transforming education through interactive game-based learning experiences that engage students and empower teachers.',
-                      style: TextStyle(
-                        color: colorScheme.onSurfaceVariant,
-                        fontSize: 14,
-                        height: 1.6,
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    Row(
-                      children: [
-                        _buildSocialIcon(context, Icons.facebook, () {}),
-                        const SizedBox(width: 12),
-                        _buildSocialIcon(context, Icons.public, () {}),
-                        const SizedBox(width: 12),
-                        _buildSocialIcon(context, Icons.business_center, () {}),
-                        const SizedBox(width: 12),
-                        _buildSocialIcon(context, Icons.video_library, () {}),
-                      ],
-                    ),
-                    const SizedBox(height: 40),
-                  ],
-                ),
-              ],
-              if (!isSmallScreen)
-                Expanded(
-                  flex: 8,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: footerLinks.map((section) {
-                      return Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 40),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                section['title'] as String,
-                                style: TextStyle(
-                                  color: colorScheme.onSurface,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              ...(section['links'] as List<String>).map((link) {
-                                return Padding(
-                                  padding: const EdgeInsets.only(bottom: 12),
-                                  child: InkWell(
-                                    onTap: () {},
-                                    child: Text(
-                                      link,
-                                      style: TextStyle(
-                                        color: colorScheme.onSurfaceVariant,
-                                        fontSize: 14,
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }),
-                            ],
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-            ],
-          ),
-          if (isSmallScreen) ...[
-            ...footerLinks.map((section) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    section['title'] as String,
-                    style: TextStyle(
-                      color: colorScheme.onSurface,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  ...(section['links'] as List<String>).map((link) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: InkWell(
-                        onTap: () {},
-                        child: Text(
-                          link,
-                          style: TextStyle(
-                            color: colorScheme.onSurfaceVariant,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                    );
-                  }),
-                  const SizedBox(height: 24),
-                ],
-              );
-            }),
-          ],
+          Text(
+            'Game Showcase',
+            style: TextStyle(
+              fontFamily: 'PixelifySans',
+              color: colorScheme.onSurface,
+              fontSize: 36,
+              fontWeight: FontWeight.bold,
+            ),
+          ).animate()
+           .fadeIn(duration: 600.ms),
+          const SizedBox(height: 16),
+          Text(
+            'Explore our diverse collection of educational game types',
+            style: TextStyle(
+              fontFamily: 'Inter',
+              color: colorScheme.onSurfaceVariant,
+              fontSize: 18,
+              height: 1.6,
+            ),
+            textAlign: TextAlign.center,
+          ).animate()
+           .fadeIn(duration: 600.ms, delay: 200.ms),
           const SizedBox(height: 40),
+          
+          // Game grid
+          isSmallScreen
+              ? Column(
+                  children: games.map((game) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: _buildGameCard(context, game),
+                    );
+                  }).toList(),
+                )
+              : GridView.count(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 24,
+                  mainAxisSpacing: 24,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: games.map((game) {
+                    return _buildGameCard(context, game);
+                  }).toList(),
+                ),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildGameCard(BuildContext context, Map<String, dynamic> game) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: colorScheme.outline.withOpacity(0.2),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.shadow.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              color: (game['color'] as Color).withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Center(
+              child: Icon(
+                game['icon'] as IconData,
+                color: game['color'] as Color,
+                size: 40,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            game['title'] as String,
+            style: TextStyle(
+              fontFamily: 'PixelifySans',
+              color: colorScheme.onSurface,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            game['description'] as String,
+            style: TextStyle(
+              fontFamily: 'Inter',
+              color: colorScheme.onSurfaceVariant,
+              fontSize: 14,
+              height: 1.5,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTestimonialsSection(BuildContext context, bool isSmallScreen) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
+    // Define stats
+    final stats = [
+      {
+        'value': '5,000+',
+        'label': 'Active Teachers',
+        'icon': Icons.school,
+      },
+      {
+        'value': '50,000+',
+        'label': 'Student Users',
+        'icon': Icons.people,
+      },
+      {
+        'value': '10,000+',
+        'label': 'Educational Games',
+        'icon': Icons.gamepad,
+      },
+      {
+        'value': '30+',
+        'label': 'Subject Areas',
+        'icon': Icons.category,
+      },
+    ];
+    
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: isSmallScreen ? 20 : 80,
+        vertical: 60,
+      ),
+      color: colorScheme.surfaceContainerLow,
+      child: Column(
+        children: [
+          Text(
+            'Join Our Growing Community',
+            style: TextStyle(
+              fontFamily: 'PixelifySans',
+              color: colorScheme.onSurface,
+              fontSize: 36,
+              fontWeight: FontWeight.bold,
+            ),
+          ).animate()
+           .fadeIn(duration: 600.ms),
+          const SizedBox(height: 16),
+          Text(
+            'Join thousands of teachers and students already transforming education',
+            style: TextStyle(
+              fontFamily: 'Inter',
+              color: colorScheme.onSurfaceVariant,
+              fontSize: 18,
+              height: 1.6,
+            ),
+            textAlign: TextAlign.center,
+          ).animate()
+           .fadeIn(duration: 600.ms, delay: 200.ms),
+          const SizedBox(height: 60),
+          
+          // Stats in grid or row
+          Wrap(
+            spacing: isSmallScreen ? 16 : 40,
+            runSpacing: 24,
+            alignment: WrapAlignment.center,
+            children: stats.map((stat) {
+              return SizedBox(
+                width: isSmallScreen ? double.infinity : 200,
+                child: _buildStatItem(context, stat),
+              );
+            }).toList(),
+          ).animate()
+           .fadeIn(duration: 800.ms, delay: 400.ms),
+        ],
+      ),
+    );
+  }
+  
+  Widget _buildStatItem(BuildContext context, Map<String, dynamic> stat) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: colorScheme.primary.withOpacity(0.1),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            stat['icon'] as IconData,
+            color: colorScheme.primary,
+            size: 32,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Text(
+          stat['value'] as String,
+          style: TextStyle(
+            fontFamily: 'PixelifySans',
+            color: colorScheme.primary,
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          stat['label'] as String,
+          style: TextStyle(
+            fontFamily: 'Inter',
+            color: colorScheme.onSurfaceVariant,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFooter(BuildContext context, bool isSmallScreen) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: isSmallScreen ? 20 : 80,
+        vertical: isSmallScreen ? 40 : 80,
+      ),
+      color: colorScheme.surface,
+      child: Column(
+        children: [
+          // Large slogan with Pixelify Sans font
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(
+              vertical: isSmallScreen ? 30 : 60,
+            ),
+            decoration: BoxDecoration(
+              color: colorScheme.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: colorScheme.primary.withOpacity(0.3),
+                width: 2,
+              ),
+            ),
+            child: Text(
+              'Empowering Teachers Engaging Students',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'PixelifySans',
+                fontSize: isSmallScreen ? 28 : 42,
+                fontWeight: FontWeight.bold,
+                color: colorScheme.primary,
+                height: 1.3,
+              ),
+            ),
+          ).animate()
+           .fadeIn(duration: 600.ms)
+           .slideY(begin: 0.2, end: 0),
+           
+          const SizedBox(height: 32),
           Divider(color: colorScheme.outline.withOpacity(0.2)),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 '© 2023 Learn, Play, Level Up. All rights reserved.',
@@ -1038,56 +1192,9 @@ class HomePage extends StatelessWidget {
                   fontSize: 14,
                 ),
               ),
-              if (!isSmallScreen)
-                Row(
-                  children: [
-                    TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        'Privacy Policy',
-                        style: TextStyle(
-                          color: colorScheme.onSurfaceVariant,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        'Terms of Service',
-                        style: TextStyle(
-                          color: colorScheme.onSurfaceVariant,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
             ],
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildSocialIcon(BuildContext context, IconData icon, VoidCallback onTap) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          border: Border.all(color: colorScheme.outline.withOpacity(0.2)),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(
-          icon,
-          color: colorScheme.onSurfaceVariant,
-          size: 20,
-        ),
       ),
     );
   }

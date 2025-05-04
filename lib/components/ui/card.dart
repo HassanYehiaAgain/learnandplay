@@ -1,68 +1,90 @@
 import 'package:flutter/material.dart';
 import 'package:learn_play_level_up_flutter/theme/app_theme.dart';
 
+/// A custom card component with various styles and configurations
 class AppCard extends StatelessWidget {
   final Widget child;
+  final EdgeInsetsGeometry? padding;
+  final double? width;
+  final double? height;
+  final bool hasShadow;
   final Color? backgroundColor;
-  final double? elevation;
-  final EdgeInsetsGeometry padding;
-  final BorderRadius? borderRadius;
-  final Border? border;
+  final Color? borderColor;
+  final double borderRadius;
+  final double borderWidth;
   final VoidCallback? onTap;
+  final bool isInteractive;
   final bool isHoverable;
-
+  
   const AppCard({
     super.key,
     required this.child,
+    this.padding,
+    this.width,
+    this.height,
+    this.hasShadow = true,
     this.backgroundColor,
-    this.elevation,
-    this.padding = const EdgeInsets.all(16),
-    this.borderRadius,
-    this.border,
+    this.borderColor,
+    this.borderRadius = 16,
+    this.borderWidth = 1,
     this.onTap,
+    this.isInteractive = false,
     this.isHoverable = false,
   });
-
+  
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     
-    final cardDecoration = BoxDecoration(
-      color: backgroundColor ?? colorScheme.surface,
-      borderRadius: borderRadius ?? BorderRadius.circular(12),
-      border: border ?? Border.all(color: colorScheme.outline.withOpacity(0.2)),
-      boxShadow: [
-        BoxShadow(
-          color: colorScheme.shadow.withOpacity(elevation != null ? elevation! * 0.1 : 0.05),
-          blurRadius: elevation != null ? elevation! * 2 : 4,
-          offset: const Offset(0, 2),
-        ),
-      ],
-    );
-
-    if (onTap != null) {
-      return InkWell(
-        onTap: onTap,
-        borderRadius: borderRadius ?? BorderRadius.circular(12),
-        hoverColor: isHoverable 
-            ? colorScheme.primary.withOpacity(0.05) 
-            : Colors.transparent,
-        child: Ink(
-          decoration: cardDecoration,
-          child: Padding(
-            padding: padding,
-            child: child,
-          ),
-        ),
-      );
-    }
+    final effectiveBackgroundColor = backgroundColor ?? colorScheme.surface;
+    final effectiveBorderColor = borderColor ?? colorScheme.outline.withOpacity(0.2);
     
-    return Container(
+    final cardDecoration = BoxDecoration(
+      color: effectiveBackgroundColor,
+      borderRadius: BorderRadius.circular(borderRadius),
+      border: Border.all(
+        color: effectiveBorderColor,
+        width: borderWidth,
+      ),
+      boxShadow: hasShadow
+          ? [
+              BoxShadow(
+                color: colorScheme.shadow,
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ]
+          : null,
+    );
+    
+    Widget cardContent = Container(
+      width: width,
+      height: height,
+      padding: padding ?? const EdgeInsets.all(16),
       decoration: cardDecoration,
-      padding: padding,
       child: child,
     );
+    
+    if (isInteractive || onTap != null) {
+      return Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(borderRadius),
+          splashColor: colorScheme.primary.withOpacity(0.1),
+          highlightColor: colorScheme.primary.withOpacity(0.05),
+          child: cardContent,
+        ),
+      );
+    } else if (isHoverable) {
+      return MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: cardContent,
+      );
+    } else {
+      return cardContent;
+    }
   }
 }
 

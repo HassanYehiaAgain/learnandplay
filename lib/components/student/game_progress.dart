@@ -544,7 +544,7 @@ class GameProgress extends StatelessWidget {
   }
 
   Widget _buildPixelatedIcon(double size, Color color) {
-    return Container(
+    return SizedBox(
       width: size,
       height: size,
       child: GridView.builder(

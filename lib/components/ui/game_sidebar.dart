@@ -29,7 +29,7 @@ class GameSidebar extends StatefulWidget {
   final double? userProgress;
 
   const GameSidebar({
-    Key? key,
+    super.key,
     required this.items,
     this.expanded = true,
     this.onExpandToggle,
@@ -37,7 +37,7 @@ class GameSidebar extends StatefulWidget {
     this.username,
     this.userLevel,
     this.userProgress,
-  }) : super(key: key);
+  });
 
   @override
   State<GameSidebar> createState() => _GameSidebarState();
@@ -165,22 +165,23 @@ class _GameSidebarState extends State<GameSidebar> with SingleTickerProviderStat
 
   Widget _buildLogoArea(ColorScheme colorScheme) {
     return Container(
-      height: 80,
+      height: 100,
       padding: EdgeInsets.symmetric(
         horizontal: widget.expanded ? 16 : 12,
       ),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(12),
               gradient: AppGradients.purpleToPink,
             ),
-            child: Icon(
-              Icons.gamepad,
+            child: Image.asset(
+              'assets/logo/logo.png',
+              width: 32,
+              height: 32,
               color: Colors.white,
-              size: 24,
             ),
           ),
           
@@ -189,7 +190,7 @@ class _GameSidebarState extends State<GameSidebar> with SingleTickerProviderStat
             axis: Axis.horizontal,
             axisAlignment: -1,
             child: Padding(
-              padding: const EdgeInsets.only(left: 12),
+              padding: const EdgeInsets.only(left: 16),
               child: Text(
                 'Learn & Play',
                 style: TextStyle(
@@ -366,7 +367,7 @@ class _SidebarNavItem extends StatefulWidget {
   final Animation<double> animation;
 
   const _SidebarNavItem({
-    Key? key,
+    super.key,
     required this.title,
     required this.icon,
     required this.path,
@@ -375,7 +376,7 @@ class _SidebarNavItem extends StatefulWidget {
     this.isActive = false,
     required this.expanded,
     required this.animation,
-  }) : super(key: key);
+  });
 
   @override
   State<_SidebarNavItem> createState() => _SidebarNavItemState();

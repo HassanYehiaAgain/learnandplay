@@ -3,6 +3,12 @@ import 'package:learn_play_level_up_flutter/components/navbar.dart';
 import 'package:learn_play_level_up_flutter/components/ui/button.dart';
 import 'package:learn_play_level_up_flutter/components/ui/card.dart';
 import 'package:learn_play_level_up_flutter/components/ui/input.dart';
+import 'package:learn_play_level_up_flutter/models/firebase_models.dart';
+import 'package:learn_play_level_up_flutter/services/firebase_service.dart';
+import 'package:learn_play_level_up_flutter/services/auth_service.dart';
+import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
+import 'package:go_router/go_router.dart';
 
 class CreateGamePage extends StatefulWidget {
   const CreateGamePage({super.key});
@@ -13,6 +19,7 @@ class CreateGamePage extends StatefulWidget {
 
 class _CreateGamePageState extends State<CreateGamePage> {
   final _formKey = GlobalKey<FormState>();
+  final uuid = const Uuid();
   
   // Form controllers
   final _titleController = TextEditingController();
@@ -23,8 +30,12 @@ class _CreateGamePageState extends State<CreateGamePage> {
   int _selectedDifficulty = 3;
   int _estimatedTime = 10;
   final List<Map<String, dynamic>> _questions = [];
+  DateTime _dueDate = DateTime.now().add(const Duration(days: 7));
+  String? _selectedSubjectId;
+  List<Subject> _teacherSubjects = [];
   
-  final bool _isLoading = false;
+  // Loading state
+  bool _isLoading = true;
   bool _isSaving = false;
   
   // Added state variables for template selection
@@ -138,6 +149,50 @@ class _CreateGamePageState extends State<CreateGamePage> {
   void initState() {
     super.initState();
     // Template selection screen will be shown first
+    _loadTeacherSubjects();
+  }
+  
+  Future<void> _loadTeacherSubjects() async {
+    setState(() {
+      _isLoading = true;
+    });
+    
+    try {
+      final authService = Provider.of<AuthService>(context, listen: false);
+      final firebaseService = Provider.of<FirebaseService>(context, listen: false);
+      
+      // Get current user
+      final currentUser = authService.currentUser;
+      if (currentUser == null || currentUser.role != 'teacher') {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('You must be logged in as a teacher to create games')),
+          );
+          GoRouter.of(context).go('/signin');
+        }
+        return;
+      }
+      
+      // Load teacher's subjects
+      _teacherSubjects = await firebaseService.getTeacherSubjects(currentUser.id);
+      
+      // If there are subjects, select the first one by default
+      if (_teacherSubjects.isNotEmpty) {
+        _selectedSubjectId = _teacherSubjects.first.id;
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error loading subjects: $e')),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
   
   @override
@@ -279,6 +334,14 @@ class _CreateGamePageState extends State<CreateGamePage> {
       return;
     }
     
+    // Validate subject selection
+    if (_selectedSubjectId == null || _selectedSubjectId!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please select a subject')),
+      );
+      return;
+    }
+    
     // Validate questions
     for (var i = 0; i < _questions.length; i++) {
       if (_questions[i]['text'].isEmpty) {
@@ -314,10 +377,69 @@ class _CreateGamePageState extends State<CreateGamePage> {
     });
     
     try {
-      // TODO: Implement API call to save game
+      final authService = Provider.of<AuthService>(context, listen: false);
+      final firebaseService = Provider.of<FirebaseService>(context, listen: false);
       
-      // Mock save operation
-      await Future.delayed(const Duration(seconds: 1));
+      // Get current user
+      final currentUser = authService.currentUser;
+      if (currentUser == null || currentUser.role != 'teacher') {
+        throw Exception('You must be logged in as a teacher to create games');
+      }
+      
+      // Find selected subject to get grade year
+      final selectedSubject = _teacherSubjects.firstWhere(
+        (s) => s.id == _selectedSubjectId,
+        orElse: () => throw Exception('Subject not found')
+      );
+      
+      // Calculate max points
+      int maxPoints = 0;
+      for (final question in _questions) {
+        maxPoints += question['points'] as int;
+      }
+      
+      // Convert questions to GameQuestion objects
+      final gameQuestions = _questions.map((q) {
+        final options = (q['options'] as List).map((o) {
+          return GameOption(
+            id: uuid.v4(),
+            text: o['text'],
+            isCorrect: o['isCorrect'],
+            explanation: null,
+          );
+        }).toList();
+        
+        return GameQuestion(
+          id: uuid.v4(),
+          text: q['text'],
+          options: options,
+          points: q['points'],
+          imageUrl: null,
+          timeLimit: 30, // Default time limit
+        );
+      }).toList();
+      
+      // Create the EducationalGame object
+      final game = EducationalGame(
+        id: '', // Will be set by Firestore
+        title: _titleController.text,
+        description: _descriptionController.text,
+        coverImage: null,
+        teacherId: currentUser.id,
+        subjectId: _selectedSubjectId!,
+        gradeYear: selectedSubject.gradeYear,
+        createdAt: DateTime.now(),
+        dueDate: _dueDate,
+        isActive: true,
+        questions: gameQuestions,
+        difficulty: _selectedDifficulty,
+        estimatedDuration: _estimatedTime,
+        tags: [_selectedCategory],
+        maxPoints: maxPoints,
+      );
+      
+      // Save the game to Firebase
+      final gameId = await firebaseService.createGame(game);
       
       if (!mounted) return;
       
@@ -327,7 +449,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
       );
       
       // Navigate back to teacher dashboard
-      Navigator.pushReplacementNamed(context, '/teacher/dashboard');
+      GoRouter.of(context).go('/teacher/dashboard');
     } catch (e) {
       if (!mounted) return;
       
@@ -354,7 +476,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
       backgroundColor: colorScheme.surface,
       body: Column(
         children: [
-          const Navbar(isAuthenticated: true, userRole: 'teacher'),
+          const Navbar(isAuthenticated: true, userRole: 'teacher', isInternal: true),
           Expanded(
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
@@ -400,181 +522,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
                                   children: [
                                     // Game Basic Info
                                     AppCard(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            'Game Information',
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w600,
-                                              color: colorScheme.onSurface,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 24),
-                                          
-                                          AppInput(
-                                            label: 'Game Title',
-                                            placeholder: 'Enter a title for your game',
-                                            controller: _titleController,
-                                            validator: (value) {
-                                              if (value == null || value.isEmpty) {
-                                                return 'Please enter a title';
-                                              }
-                                              return null;
-                                            },
-                                          ),
-                                          const SizedBox(height: 24),
-                                          
-                                          AppInput(
-                                            label: 'Description',
-                                            placeholder: 'Enter a description of your game',
-                                            controller: _descriptionController,
-                                            maxLines: 3,
-                                            validator: (value) {
-                                              if (value == null || value.isEmpty) {
-                                                return 'Please enter a description';
-                                              }
-                                              return null;
-                                            },
-                                          ),
-                                          const SizedBox(height: 24),
-                                          
-                                          Row(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      'Category',
-                                                      style: TextStyle(
-                                                        color: colorScheme.onSurface,
-                                                        fontSize: 14,
-                                                        fontWeight: FontWeight.w500,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(height: 8),
-                                                    DropdownButtonFormField<String>(
-                                                      value: _selectedCategory,
-                                                      decoration: InputDecoration(
-                                                        border: OutlineInputBorder(
-                                                          borderRadius: BorderRadius.circular(8),
-                                                        ),
-                                                        contentPadding: const EdgeInsets.symmetric(
-                                                          horizontal: 16,
-                                                          vertical: 12,
-                                                        ),
-                                                      ),
-                                                      items: [
-                                                        'Mathematics',
-                                                        'Science',
-                                                        'Language Arts',
-                                                        'Social Studies',
-                                                        'Foreign Languages',
-                                                        'Programming',
-                                                        'Arts',
-                                                        'Other',
-                                                      ].map((String category) {
-                                                        return DropdownMenuItem<String>(
-                                                          value: category,
-                                                          child: Text(category),
-                                                        );
-                                                      }).toList(),
-                                                      onChanged: (String? newValue) {
-                                                        if (newValue != null) {
-                                                          setState(() {
-                                                            _selectedCategory = newValue;
-                                                          });
-                                                        }
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              const SizedBox(width: 24),
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      'Difficulty Level',
-                                                      style: TextStyle(
-                                                        color: colorScheme.onSurface,
-                                                        fontSize: 14,
-                                                        fontWeight: FontWeight.w500,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(height: 8),
-                                                    Row(
-                                                      children: List.generate(5, (index) {
-                                                        return IconButton(
-                                                          icon: Icon(
-                                                            index < _selectedDifficulty
-                                                                ? Icons.star
-                                                                : Icons.star_border,
-                                                            color: index < _selectedDifficulty
-                                                                ? colorScheme.tertiary
-                                                                : colorScheme.outline,
-                                                          ),
-                                                          onPressed: () {
-                                                            setState(() {
-                                                              _selectedDifficulty = index + 1;
-                                                            });
-                                                          },
-                                                        );
-                                                      }),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 24),
-                                          
-                                          Row(
-                                            children: [
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      'Estimated Time (minutes)',
-                                                      style: TextStyle(
-                                                        color: colorScheme.onSurface,
-                                                        fontSize: 14,
-                                                        fontWeight: FontWeight.w500,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(height: 8),
-                                                    Slider(
-                                                      value: _estimatedTime.toDouble(),
-                                                      min: 5,
-                                                      max: 30,
-                                                      divisions: 5,
-                                                      label: _estimatedTime.toString(),
-                                                      onChanged: (double value) {
-                                                        setState(() {
-                                                          _estimatedTime = value.toInt();
-                                                        });
-                                                      },
-                                                    ),
-                                                    Center(
-                                                      child: Text(
-                                                        '$_estimatedTime minutes',
-                                                        style: TextStyle(
-                                                          color: colorScheme.onSurfaceVariant,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
+                                      child: _buildGameInfoCard(context, colorScheme),
                                     ),
                                     const SizedBox(height: 32),
                                     
@@ -650,7 +598,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
                                             variant: ButtonVariant.outline,
                                             isFullWidth: true,
                                             onPressed: () {
-                                              Navigator.pop(context);
+                                              GoRouter.of(context).go('/teacher/dashboard');
                                             },
                                           ),
                                         ),
@@ -694,7 +642,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
                 IconButton(
                   icon: const Icon(Icons.arrow_back),
                   onPressed: () {
-                    Navigator.pop(context);
+                    GoRouter.of(context).go('/teacher/dashboard');
                   },
                 ),
                 const SizedBox(width: 16),
@@ -808,7 +756,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
                         Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: colorScheme.surfaceVariant.withOpacity(0.3),
+                            color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
@@ -1046,7 +994,7 @@ class _CreateGamePageState extends State<CreateGamePage> {
                       decoration: BoxDecoration(
                         color: isCorrect 
                           ? colorScheme.primary.withOpacity(0.1) 
-                          : colorScheme.surfaceVariant,
+                          : colorScheme.surfaceContainerHighest,
                         shape: BoxShape.circle,
                         border: Border.all(
                           color: isCorrect 
@@ -1099,5 +1047,283 @@ class _CreateGamePageState extends State<CreateGamePage> {
         ],
       ),
     );
+  }
+  
+  Widget _buildGameInfoCard(BuildContext context, ColorScheme colorScheme) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Game Information',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: colorScheme.onSurface,
+          ),
+        ),
+        const SizedBox(height: 24),
+        
+        AppInput(
+          label: 'Game Title',
+          placeholder: 'Enter a title for your game',
+          controller: _titleController,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter a title';
+            }
+            return null;
+          },
+        ),
+        const SizedBox(height: 24),
+        
+        AppInput(
+          label: 'Description',
+          placeholder: 'Enter a description of your game',
+          controller: _descriptionController,
+          maxLines: 3,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Please enter a description';
+            }
+            return null;
+          },
+        ),
+        const SizedBox(height: 24),
+        
+        // Subject Selection
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Subject',
+              style: TextStyle(
+                color: colorScheme.onSurface,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 8),
+            DropdownButtonFormField<String>(
+              value: _selectedSubjectId,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
+              ),
+              items: _teacherSubjects.map((subject) {
+                return DropdownMenuItem<String>(
+                  value: subject.id,
+                  child: Text('${subject.name} (Grade ${subject.gradeYear})'),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                if (newValue != null) {
+                  setState(() {
+                    _selectedSubjectId = newValue;
+                  });
+                }
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please select a subject';
+                }
+                return null;
+              },
+            ),
+          ],
+        ),
+        const SizedBox(height: 24),
+        
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Category',
+                    style: TextStyle(
+                      color: colorScheme.onSurface,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  DropdownButtonFormField<String>(
+                    value: _selectedCategory,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                    ),
+                    items: [
+                      'Mathematics',
+                      'Science',
+                      'Language Arts',
+                      'Social Studies',
+                      'Foreign Languages',
+                      'Programming',
+                      'Arts',
+                      'Other',
+                    ].map((String category) {
+                      return DropdownMenuItem<String>(
+                        value: category,
+                        child: Text(category),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      if (newValue != null) {
+                        setState(() {
+                          _selectedCategory = newValue;
+                        });
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 24),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Difficulty Level',
+                    style: TextStyle(
+                      color: colorScheme.onSurface,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: List.generate(5, (index) {
+                      return IconButton(
+                        icon: Icon(
+                          index < _selectedDifficulty
+                              ? Icons.star
+                              : Icons.star_border,
+                          color: index < _selectedDifficulty
+                              ? colorScheme.tertiary
+                              : colorScheme.outline,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _selectedDifficulty = index + 1;
+                          });
+                        },
+                      );
+                    }),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 24),
+        
+        // Due Date Selection
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Due Date',
+              style: TextStyle(
+                color: colorScheme.onSurface,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 8),
+            InkWell(
+              onTap: () async {
+                final pickedDate = await showDatePicker(
+                  context: context,
+                  initialDate: _dueDate,
+                  firstDate: DateTime.now(),
+                  lastDate: DateTime.now().add(const Duration(days: 365)),
+                );
+                
+                if (pickedDate != null) {
+                  setState(() {
+                    _dueDate = pickedDate;
+                  });
+                }
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  border: Border.all(color: colorScheme.outline),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(_formatDate(_dueDate)),
+                    Icon(Icons.calendar_today, color: colorScheme.primary),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 24),
+        
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Estimated Time (minutes)',
+                    style: TextStyle(
+                      color: colorScheme.onSurface,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Slider(
+                    value: _estimatedTime.toDouble(),
+                    min: 5,
+                    max: 30,
+                    divisions: 5,
+                    label: _estimatedTime.toString(),
+                    onChanged: (double value) {
+                      setState(() {
+                        _estimatedTime = value.toInt();
+                      });
+                    },
+                  ),
+                  Center(
+                    child: Text(
+                      '$_estimatedTime minutes',
+                      style: TextStyle(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+  
+  // Helper method to format dates for display
+  String _formatDate(DateTime date) {
+    return '${date.month}/${date.day}/${date.year}';
   }
 } 

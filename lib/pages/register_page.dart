@@ -30,23 +30,23 @@ class _RegisterPageState extends State<RegisterPage> {
   String _selectedRole = 'student'; // Default role
   int _currentStep = 0;
   String _displayName = '';
-  String _avatarColor = '';
+  final String _avatarColor = '';
   
   // Updated and reorganized subject list
   final List<Map<String, List<String>>> _subjectGroups = [
     {
       'Language & Literature': [
-    'Language Arts',
+        'Language Arts',
         'Literature',
       ]
     },
     {
       'Science': [
-        'Science',
         'Biology',
         'Chemistry',
         'Physics',
         'Environmental Science',
+        'Science',
       ]
     },
     {
@@ -61,15 +61,15 @@ class _RegisterPageState extends State<RegisterPage> {
     },
     {
       'Social Sciences': [
-    'Social Studies',
+        'Social Studies',
         'History',
         'Geography',
+        'Sociology',
+        'Psychology',
       ]
     },
     {
-      'Humanities & Business': [
-        'Sociology',
-        'Psychology',
+      'Business & Economics': [
         'Economics',
         'Business & Marketing',
         'Accounting',
@@ -205,12 +205,70 @@ class _RegisterPageState extends State<RegisterPage> {
       // Get the AuthService instance
       final authService = Provider.of<AuthService>(context, listen: false);
       
-      // Call the register method
+      // Prepare role-specific data
+      List<String>? teachingSubjects;
+      List<int>? teachingGradeYears;
+      int? studentGradeYear;
+      
+      if (_selectedRole == 'teacher') {
+        teachingSubjects = _selectedSubjects;
+        teachingGradeYears = _selectedGradeYears.map((grade) {
+          // Convert grade year string to int (e.g., "3rd Grade" -> 3)
+          if (grade == 'Kindergarten') return 0;
+          
+          // Extract the number from the grade year string
+          final match = RegExp(r'(\d+)').firstMatch(grade);
+          if (match != null) {
+            return int.parse(match.group(1)!);
+          }
+          return 1; // Default to 1st grade if parsing fails
+        }).toList();
+      } else {
+        // Extract grade year for student
+        if (_selectedGradeYear == 'Kindergarten') {
+          studentGradeYear = 0;
+        } else {
+          final match = RegExp(r'(\d+)').firstMatch(_selectedGradeYear);
+          if (match != null) {
+            studentGradeYear = int.parse(match.group(1)!);
+          }
+        }
+      }
+      
+      // Validate required selections
+      if (_selectedRole == 'teacher') {
+        if (_selectedGradeYears.isEmpty) {
+          setState(() {
+            _errorMessage = 'Please select at least one grade year you teach.';
+            _isLoading = false;
+          });
+          return;
+        }
+        
+        if (_selectedSubjects.isEmpty) {
+          setState(() {
+            _errorMessage = 'Please select at least one subject you teach.';
+            _isLoading = false;
+          });
+          return;
+        }
+      } else if (_selectedGradeYear.isEmpty) {
+        setState(() {
+          _errorMessage = 'Please select your grade year.';
+          _isLoading = false;
+        });
+        return;
+      }
+      
+      // Call the enhanced register method
       final success = await authService.register(
-        _nameController.text,
-        _emailController.text,
-        _passwordController.text,
-        _selectedRole,
+        name: _nameController.text,
+        email: _emailController.text,
+        password: _passwordController.text,
+        role: _selectedRole,
+        teachingSubjects: teachingSubjects,
+        teachingGradeYears: teachingGradeYears,
+        studentGradeYear: studentGradeYear,
       );
       
       if (!mounted) return;
@@ -225,13 +283,13 @@ class _RegisterPageState extends State<RegisterPage> {
       } else {
         // Registration failed, show the error message from auth service
         setState(() {
-          _errorMessage = authService.error ?? 'Failed to register. Please try again.';
+          _errorMessage = _getFormattedErrorMessage(authService.error ?? 'Failed to register. Please try again.');
         });
       }
     } catch (e) {
       if (mounted) {
         setState(() {
-          _errorMessage = 'Registration error: $e';
+          _errorMessage = _getFormattedErrorMessage('Registration error: $e');
         });
       }
     } finally {
@@ -241,6 +299,22 @@ class _RegisterPageState extends State<RegisterPage> {
         });
       }
     }
+  }
+  
+  String _getFormattedErrorMessage(String error) {
+    // Parse Firebase error messages and make them more user-friendly
+    if (error.contains('email-already-in-use')) {
+      return 'This email is already registered. Please use a different email or sign in.';
+    } else if (error.contains('invalid-email')) {
+      return 'Invalid email format. Please enter a valid email address.';
+    } else if (error.contains('operation-not-allowed')) {
+      return 'Registration is temporarily disabled. Please try again later.';
+    } else if (error.contains('weak-password')) {
+      return 'Password is too weak. Please use a stronger password with at least 6 characters.';
+    } else if (error.contains('network-request-failed')) {
+      return 'Network error. Please check your internet connection and try again.';
+    }
+    return error;
   }
 
   @override
@@ -858,9 +932,9 @@ class _RegisterPageState extends State<RegisterPage> {
     
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-          'Customize your profile',
+      children: [
+        Text(
+          'Profile Customization',
           style: TextStyle(
             fontFamily: 'PixelifySans',
             fontSize: 18,
@@ -871,12 +945,12 @@ class _RegisterPageState extends State<RegisterPage> {
         const SizedBox(height: 8),
         Text(
           'Personalize your account with a display name and avatar',
-                            style: TextStyle(
+          style: TextStyle(
             fontFamily: 'Inter',
-                              fontSize: 14,
-                              color: colorScheme.onSurfaceVariant,
-                            ),
-                          ),
+            fontSize: 14,
+            color: colorScheme.onSurfaceVariant,
+          ),
+        ),
         const SizedBox(height: 32),
         
         // Display Name
@@ -894,7 +968,7 @@ class _RegisterPageState extends State<RegisterPage> {
         // Avatar selection
         Text(
           'Choose an avatar',
-                              style: TextStyle(
+          style: TextStyle(
             fontFamily: 'PixelifySans',
             fontSize: 16,
             color: colorScheme.onSurface,
@@ -946,46 +1020,62 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
           const SizedBox(height: 16),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: _gradeYears.map((grade) {
-              final isSelected = _selectedGradeYear == grade;
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _selectedGradeYear = grade;
-                  });
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? colorScheme.primary
-                        : colorScheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: colorScheme.outline.withOpacity(0.3)),
+            ),
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 12,
+              children: _gradeYears.map((grade) {
+                final isSelected = _selectedGradeYear == grade;
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _selectedGradeYear = grade;
+                    });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
                       color: isSelected
                           ? colorScheme.primary
-                          : colorScheme.outline.withOpacity(0.3),
+                          : colorScheme.surface,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: isSelected
+                            ? colorScheme.primary
+                            : colorScheme.outline.withOpacity(0.3),
+                      ),
+                      boxShadow: isSelected ? [
+                        BoxShadow(
+                          color: colorScheme.shadow.withOpacity(0.1),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ] : null,
+                    ),
+                    child: Text(
+                      grade,
+                      style: TextStyle(
+                        fontFamily: 'PixelifySans',
+                        fontSize: 14,
+                        color: isSelected
+                            ? Colors.white
+                            : colorScheme.onSurface,
+                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      ),
                     ),
                   ),
-                  child: Text(
-                    grade,
-                    style: TextStyle(
-                      fontFamily: 'PixelifySans',
-                      fontSize: 14,
-                      color: isSelected
-                          ? Colors.white
-                          : colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ),
-              );
-            }).toList(),
+                );
+              }).toList(),
+            ),
           ),
         ],
         
@@ -997,6 +1087,7 @@ class _RegisterPageState extends State<RegisterPage> {
               fontFamily: 'PixelifySans',
               fontSize: 16,
               color: colorScheme.onSurface,
+              fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 8),
@@ -1009,50 +1100,66 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
           const SizedBox(height: 16),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: _gradeYears.map((grade) {
-              final isSelected = _selectedGradeYears.contains(grade);
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    if (isSelected) {
-                      _selectedGradeYears.remove(grade);
-                    } else {
-                      _selectedGradeYears.add(grade);
-                    }
-                  });
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? colorScheme.primary
-                        : colorScheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: colorScheme.outline.withOpacity(0.3)),
+            ),
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 12,
+              children: _gradeYears.map((grade) {
+                final isSelected = _selectedGradeYears.contains(grade);
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      if (isSelected) {
+                        _selectedGradeYears.remove(grade);
+                      } else {
+                        _selectedGradeYears.add(grade);
+                      }
+                    });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
                       color: isSelected
                           ? colorScheme.primary
-                          : colorScheme.outline.withOpacity(0.3),
+                          : colorScheme.surface,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: isSelected
+                            ? colorScheme.primary
+                            : colorScheme.outline.withOpacity(0.3),
+                      ),
+                      boxShadow: isSelected ? [
+                        BoxShadow(
+                          color: colorScheme.shadow.withOpacity(0.1),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ] : null,
+                    ),
+                    child: Text(
+                      grade,
+                      style: TextStyle(
+                        fontFamily: 'PixelifySans',
+                        fontSize: 14,
+                        color: isSelected
+                            ? Colors.white
+                            : colorScheme.onSurface,
+                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                      ),
                     ),
                   ),
-                  child: Text(
-                    grade,
-                    style: TextStyle(
-                      fontFamily: 'PixelifySans',
-                      fontSize: 14,
-                      color: isSelected
-                          ? Colors.white
-                          : colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ),
-              );
-            }).toList(),
+                );
+              }).toList(),
+            ),
           ),
           const SizedBox(height: 24),
           
@@ -1062,6 +1169,7 @@ class _RegisterPageState extends State<RegisterPage> {
               fontFamily: 'PixelifySans',
               fontSize: 16,
               color: colorScheme.onSurface,
+              fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 8),
@@ -1077,62 +1185,83 @@ class _RegisterPageState extends State<RegisterPage> {
           
           // Organized subject selection by groups
           for (final group in _subjectGroups) ...[
-            Text(
-              group.keys.first,
-              style: TextStyle(
-                fontFamily: 'PixelifySans',
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: colorScheme.primary,
+            Container(
+              margin: const EdgeInsets.only(bottom: 16),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: colorScheme.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: colorScheme.outline.withOpacity(0.3)),
               ),
-            ),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: group.values.first.map((subject) {
-              final isSelected = _selectedSubjects.contains(subject);
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    if (isSelected) {
-                      _selectedSubjects.remove(subject);
-                    } else {
-                      _selectedSubjects.add(subject);
-                    }
-                  });
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? colorScheme.primary
-                        : colorScheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: isSelected
-                          ? colorScheme.primary
-                          : colorScheme.outline.withOpacity(0.3),
-                    ),
-                  ),
-                  child: Text(
-                    subject,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    group.keys.first,
                     style: TextStyle(
                       fontFamily: 'PixelifySans',
-                      fontSize: 14,
-                      color: isSelected
-                          ? Colors.white
-                          : colorScheme.onSurfaceVariant,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: colorScheme.primary,
                     ),
                   ),
-                ),
-              );
-            }).toList(),
-          ),
-            const SizedBox(height: 16),
+                  const SizedBox(height: 12),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 12,
+                    children: group.values.first.map((subject) {
+                      final isSelected = _selectedSubjects.contains(subject);
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            if (isSelected) {
+                              _selectedSubjects.remove(subject);
+                            } else {
+                              _selectedSubjects.add(subject);
+                            }
+                          });
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? colorScheme.primary
+                                : colorScheme.surface,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: isSelected
+                                  ? colorScheme.primary
+                                  : colorScheme.outline.withOpacity(0.3),
+                            ),
+                            boxShadow: isSelected ? [
+                              BoxShadow(
+                                color: colorScheme.shadow.withOpacity(0.1),
+                                blurRadius: 4,
+                                offset: const Offset(0, 2),
+                              ),
+                            ] : null,
+                          ),
+                          child: Text(
+                            subject,
+                            style: TextStyle(
+                              fontFamily: 'PixelifySans',
+                              fontSize: 14,
+                              color: isSelected
+                                  ? Colors.white
+                                  : colorScheme.onSurface,
+                              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ],
+              ),
+            ),
           ],
         ],
       ],

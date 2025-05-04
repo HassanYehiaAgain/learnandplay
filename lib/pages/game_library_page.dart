@@ -5,7 +5,7 @@ import 'package:learn_play_level_up_flutter/components/ui/card.dart';
 import 'package:learn_play_level_up_flutter/theme/app_theme.dart';
 
 class GameLibraryPage extends StatelessWidget {
-  const GameLibraryPage({Key? key}) : super(key: key);
+  const GameLibraryPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class GameLibraryPage extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          const Navbar(isAuthenticated: false),
+          const Navbar(isAuthenticated: true, isInternal: true),
           Expanded(
             child: SingleChildScrollView(
               child: Column(

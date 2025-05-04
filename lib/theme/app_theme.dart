@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// App Theme based on logo colors
 /// This file defines all color schemes and theme data for the app
@@ -7,48 +8,106 @@ class AppTheme {
   
   // Logo-based colors with exact hex codes
   static const Color teal = Color(0xFF2BA498);      // Primary color
-  static const Color yellow = Color(0xFFFFD93D);    // Accent color
-  static const Color orange = Color(0xFFF59E0B);    // Highlight color
-  static const Color purple = Color(0xFFA855F7);    // Secondary widgets
-  static const Color green = Color(0xFF34D399);     // Success states
-  static const Color offWhite = Color(0xFFF5F5F5);  // Background tint
+  static const Color yellow = Color(0xFFFFDA7B);    // Accent color (slightly muted)
+  static const Color orange = Color(0xFFF5B14F);    // Highlight color (slightly muted)
+  static const Color purple = Color(0xFFA55FC7);    // Secondary widgets (slightly muted)
+  static const Color green = Color(0xFF4DC2A0);     // Success states (slightly muted)
+  static const Color offWhite = Color(0xFFF0F2F5);  // Background tint (darker for less brightness)
   static const Color darkGrey = Color(0xFF333333);  // Text color
-  static const Color lightGrey = Color(0xFFE5E7EB); // Dividers, borders
+  static const Color lightGrey = Color(0xFFE0E3E8); // Dividers, borders (slightly darker)
   static const Color mediumGrey = Color(0xFF6B7280); // Secondary text
   
-  // Light color scheme based on logo colors
+  // Text theme with Google Fonts
+  static TextTheme get _textTheme {
+    return TextTheme(
+      // Headings - using pixel-style font for game aesthetics
+      displayLarge: GoogleFonts.pressStart2p(
+        fontSize: 24,
+        fontWeight: FontWeight.bold,
+      ),
+      displayMedium: GoogleFonts.pressStart2p(
+        fontSize: 22,
+        fontWeight: FontWeight.bold,
+      ),
+      displaySmall: GoogleFonts.pressStart2p(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      ),
+      
+      // Titles - using pixel-style font for headings
+      titleLarge: GoogleFonts.vt323(
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+      ),
+      titleMedium: GoogleFonts.vt323(
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+      ),
+      titleSmall: GoogleFonts.vt323(
+        fontSize: 14,
+        fontWeight: FontWeight.bold,
+      ),
+      
+      // Body text - using Inter for readability in sensitive content
+      bodyLarge: GoogleFonts.inter(
+        fontSize: 16,
+      ),
+      bodyMedium: GoogleFonts.inter(
+        fontSize: 14,
+      ),
+      bodySmall: GoogleFonts.inter(
+        fontSize: 12,
+      ),
+      
+      // Labels - using pixel-style font for buttons and interactive elements
+      labelLarge: GoogleFonts.vt323(
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+      ),
+      labelMedium: GoogleFonts.vt323(
+        fontSize: 14,
+        fontWeight: FontWeight.bold,
+      ),
+      labelSmall: GoogleFonts.vt323(
+        fontSize: 12,
+        fontWeight: FontWeight.bold,
+      ),
+    );
+  }
+  
+  // Light color scheme based on logo colors, but more eye-friendly
   static final ColorScheme lightColorScheme = ColorScheme(
     brightness: Brightness.light,
     primary: teal,
     onPrimary: Colors.white,
-    primaryContainer: teal.withOpacity(0.8),
+    primaryContainer: teal.withOpacity(0.9),
     onPrimaryContainer: Colors.white,
-    secondary: purple,
+    secondary: teal.withOpacity(0.8),
     onSecondary: Colors.white,
-    secondaryContainer: purple.withOpacity(0.2),
-    onSecondaryContainer: purple.withOpacity(0.8),
-    tertiary: yellow,
+    secondaryContainer: teal.withOpacity(0.15),
+    onSecondaryContainer: teal.withOpacity(0.9),
+    tertiary: yellow.withOpacity(0.9),
     onTertiary: darkGrey,
-    tertiaryContainer: yellow.withOpacity(0.2),
-    onTertiaryContainer: orange,
-    error: const Color(0xFFEF4444),
+    tertiaryContainer: yellow.withOpacity(0.15),
+    onTertiaryContainer: orange.withOpacity(0.9),
+    error: const Color(0xFFE05252),
     onError: Colors.white,
-    errorContainer: const Color(0xFFFEE2E2),
+    errorContainer: const Color(0xFFFCE9E9),
     onErrorContainer: const Color(0xFF7F1D1D),
-    surface: Colors.white,
+    surface: const Color(0xFFFAFBFC),
     onSurface: darkGrey,
-    background: offWhite,
-    onBackground: darkGrey,
-    surfaceContainerHighest: const Color(0xFFF9FAFB),
+    surfaceContainerHighest: const Color(0xFFF5F7F9),
     onSurfaceVariant: mediumGrey,
     outline: lightGrey,
     outlineVariant: lightGrey.withOpacity(0.5),
-    shadow: Colors.black.withOpacity(0.1),
+    shadow: Colors.black.withOpacity(0.08),
     scrim: Colors.black.withOpacity(0.3),
     inverseSurface: darkGrey,
     onInverseSurface: Colors.white,
-    inversePrimary: teal,
-    surfaceTint: teal.withOpacity(0.05),
+    inversePrimary: teal.withOpacity(0.9),
+    surfaceTint: teal.withOpacity(0.03),
+    background: offWhite,
+    onBackground: darkGrey,
   );
 
   // Dark color scheme - keeping for reference
@@ -72,8 +131,6 @@ class AppTheme {
     onErrorContainer: Colors.white,
     surface: const Color(0xFF1E1B29), // Dark theme background (260 30% 10%)
     onSurface: Colors.white,
-    background: const Color(0xFF1E1B29), // Dark theme background (260 30% 10%)
-    onBackground: Colors.white,
     surfaceContainerHighest: const Color(0xFF2D2A3A), // Slightly lighter dark purple
     onSurfaceVariant: const Color(0xFFD1D5DB), // Light gray
     outline: const Color(0xFF6B7280), // Medium gray
@@ -84,6 +141,8 @@ class AppTheme {
     onInverseSurface: const Color(0xFF1F2937), // Dark gray
     inversePrimary: const Color(0xFF9B87F5), // Purple
     surfaceTint: const Color(0xFF9B87F5), // Purple
+    background: const Color(0xFF121212),
+    onBackground: Colors.white,
   );
 
   // Gradients
@@ -94,7 +153,7 @@ class AppTheme {
   );
   
   static const purpleToTeal = LinearGradient(
-    colors: [purple, teal],
+    colors: [teal, Color(0xFF75E5D9)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
@@ -110,122 +169,62 @@ class AppTheme {
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
   );
+  
+  static const warningGradient = LinearGradient(
+    colors: [Color(0xFFFEE2E2), Color(0xFFFECACA)],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
 
-  // Define light theme with all properties from the requirements
+  // Get the light theme
   static ThemeData get lightTheme {
+    final baseTextTheme = _textTheme;
+    final colorScheme = lightColorScheme;
+    
     return ThemeData(
       useMaterial3: true,
-      colorScheme: lightColorScheme,
-      
-      // Background color - using off-white to avoid "white screen of death"
+      colorScheme: colorScheme,
       scaffoldBackgroundColor: offWhite,
-      
-      // AppBar theme
-      appBarTheme: AppBarTheme(
-        backgroundColor: Colors.white,
-        foregroundColor: teal,
-        elevation: 0,
-        iconTheme: IconThemeData(color: teal),
-        titleTextStyle: const TextStyle(
-          fontFamily: 'PixelifySans',
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
+      textTheme: baseTextTheme.apply(
+        displayColor: colorScheme.onSurface,
+        bodyColor: colorScheme.onSurface,
+        decorationColor: colorScheme.onSurface,
       ),
-      
-      // Text theme
-      textTheme: const TextTheme(
-        // Headings - using teal
-        displayLarge: TextStyle(
-          fontFamily: 'PixelifySans',
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-        ),
-        displayMedium: TextStyle(
-          fontFamily: 'PixelifySans',
-          fontSize: 22,
-          fontWeight: FontWeight.bold,
-        ),
-        displaySmall: TextStyle(
-          fontFamily: 'PixelifySans',
+      appBarTheme: AppBarTheme(
+        backgroundColor: colorScheme.surface,
+        foregroundColor: colorScheme.primary,
+        elevation: 0,
+        titleTextStyle: GoogleFonts.vt323(
           fontSize: 20,
           fontWeight: FontWeight.bold,
+          color: colorScheme.primary,
         ),
-        
-        // Titles - using PixelifySans for pixel art game style
-        titleLarge: TextStyle(
-          fontFamily: 'PixelifySans',
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
+        iconTheme: IconThemeData(
+          color: colorScheme.primary,
         ),
-        titleMedium: TextStyle(
-          fontFamily: 'PixelifySans',
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-        ),
-        titleSmall: TextStyle(
-          fontFamily: 'PixelifySans',
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
-        ),
-        
-        // Body text - using Inter for readability in sensitive content
-        bodyLarge: TextStyle(
-          fontFamily: 'Inter',
-          fontSize: 16,
-        ),
-        bodyMedium: TextStyle(
-          fontFamily: 'Inter',
-          fontSize: 14,
-        ),
-        bodySmall: TextStyle(
-          fontFamily: 'Inter',
-          fontSize: 12,
-        ),
-        
-        // Labels - using PixelifySans for buttons and interactive elements
-        labelLarge: TextStyle(
-          fontFamily: 'PixelifySans',
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-        ),
-        labelMedium: TextStyle(
-          fontFamily: 'PixelifySans',
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
-        ),
-        labelSmall: TextStyle(
-          fontFamily: 'PixelifySans',
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-        ),
-      ).apply(
-        displayColor: teal,
-        bodyColor: darkGrey,
-        decorationColor: darkGrey,
       ),
       
       // Elevated Button Theme - teal background with white text
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-            if (states.contains(MaterialState.disabled)) {
+          backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+            if (states.contains(WidgetState.disabled)) {
               return teal.withOpacity(0.5);
             }
             return teal;
           }),
-          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-          elevation: MaterialStateProperty.all<double>(2),
-          padding: MaterialStateProperty.all<EdgeInsets>(
+          foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
+          elevation: WidgetStateProperty.all<double>(2),
+          padding: WidgetStateProperty.all<EdgeInsets>(
             const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           ),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          overlayColor: MaterialStateProperty.resolveWith<Color>((states) {
-            if (states.contains(MaterialState.pressed)) {
+          overlayColor: WidgetStateProperty.resolveWith<Color>((states) {
+            if (states.contains(WidgetState.pressed)) {
               return Colors.white.withOpacity(0.1);
             }
             return Colors.transparent;
@@ -236,14 +235,14 @@ class AppTheme {
       // Outlined Button Theme - orange border and text
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: ButtonStyle(
-          foregroundColor: MaterialStateProperty.all<Color>(orange),
-          side: MaterialStateProperty.all<BorderSide>(
+          foregroundColor: WidgetStateProperty.all<Color>(orange),
+          side: WidgetStateProperty.all<BorderSide>(
             BorderSide(color: orange, width: 2),
           ),
-          padding: MaterialStateProperty.all<EdgeInsets>(
+          padding: WidgetStateProperty.all<EdgeInsets>(
             const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           ),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -254,11 +253,11 @@ class AppTheme {
       // Text Button Theme
       textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
-          foregroundColor: MaterialStateProperty.all<Color>(teal),
-          padding: MaterialStateProperty.all<EdgeInsets>(
+          foregroundColor: WidgetStateProperty.all<Color>(teal),
+          padding: WidgetStateProperty.all<EdgeInsets>(
             const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           ),
-          textStyle: MaterialStateProperty.all<TextStyle>(
+          textStyle: WidgetStateProperty.all<TextStyle>(
             const TextStyle(
               fontFamily: 'PixelifySans',
               fontWeight: FontWeight.bold,
@@ -277,21 +276,31 @@ class AppTheme {
         ),
       ),
       
-      // Card Theme - white with subtle shadow
+      // Card Theme - adding subtle shadows and rounded corners
       cardTheme: CardTheme(
         color: Colors.white,
-        elevation: 2,
-        shadowColor: Colors.black.withOpacity(0.1),
+        elevation: 3,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
+        shadowColor: Colors.black.withOpacity(0.08),
+        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
       ),
       
-      // Input Decoration Theme
+      // List tile theme
+      listTileTheme: ListTileThemeData(
+        tileColor: Colors.white,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+      
+      // Input decoration theme
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: Colors.white,
-        contentPadding: const EdgeInsets.all(16),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: lightGrey, width: 1),
@@ -306,10 +315,8 @@ class AppTheme {
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFFEF4444), width: 1),
+          borderSide: const BorderSide(color: Color(0xFFE05252), width: 1),
         ),
-        labelStyle: TextStyle(color: mediumGrey),
-        hintStyle: TextStyle(color: mediumGrey.withOpacity(0.7)),
       ),
       
       // Divider Color - light grey
@@ -323,14 +330,14 @@ class AppTheme {
       
       // Switch Theme
       switchTheme: SwitchThemeData(
-        thumbColor: MaterialStateProperty.resolveWith<Color>((states) {
-          if (states.contains(MaterialState.selected)) {
+        thumbColor: WidgetStateProperty.resolveWith<Color>((states) {
+          if (states.contains(WidgetState.selected)) {
             return teal;
           }
           return lightGrey;
         }),
-        trackColor: MaterialStateProperty.resolveWith<Color>((states) {
-          if (states.contains(MaterialState.selected)) {
+        trackColor: WidgetStateProperty.resolveWith<Color>((states) {
+          if (states.contains(WidgetState.selected)) {
             return teal.withOpacity(0.5);
           }
           return lightGrey.withOpacity(0.5);
@@ -339,13 +346,13 @@ class AppTheme {
       
       // Checkbox Theme
       checkboxTheme: CheckboxThemeData(
-        fillColor: MaterialStateProperty.resolveWith<Color>((states) {
-          if (states.contains(MaterialState.selected)) {
+        fillColor: WidgetStateProperty.resolveWith<Color>((states) {
+          if (states.contains(WidgetState.selected)) {
             return teal;
           }
           return Colors.transparent;
         }),
-        checkColor: MaterialStateProperty.all(Colors.white),
+        checkColor: WidgetStateProperty.all(Colors.white),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4),
         ),
@@ -368,115 +375,49 @@ class AppTheme {
     );
   }
 
-  // Add a properly constructed dark theme to avoid lerping issues
+  // Get the dark theme
   static ThemeData get darkTheme {
+    final baseTextTheme = _textTheme;
+    final colorScheme = darkColorScheme;
+    
     return ThemeData(
       useMaterial3: true,
-      colorScheme: darkColorScheme,
-      
-      // Background color
-      scaffoldBackgroundColor: const Color(0xFF1E1B29),
-      
-      // AppBar theme
-      appBarTheme: AppBarTheme(
-        backgroundColor: const Color(0xFF2D2A3A),
-        foregroundColor: Colors.white,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
-        titleTextStyle: const TextStyle(
-          fontFamily: 'PixelifySans',
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
+      colorScheme: colorScheme,
+      scaffoldBackgroundColor: colorScheme.background,
+      textTheme: baseTextTheme.apply(
+        displayColor: colorScheme.onSurface,
+        bodyColor: colorScheme.onSurface,
+        decorationColor: colorScheme.onSurface,
       ),
-      
-      // Text theme - must have same structure as light theme to avoid lerping errors
-      textTheme: const TextTheme(
-        // Headings
-        displayLarge: TextStyle(
-          fontFamily: 'PixelifySans',
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-        ),
-        displayMedium: TextStyle(
-          fontFamily: 'PixelifySans',
-          fontSize: 22,
-          fontWeight: FontWeight.bold,
-        ),
-        displaySmall: TextStyle(
-          fontFamily: 'PixelifySans',
+      appBarTheme: AppBarTheme(
+        backgroundColor: colorScheme.surface,
+        foregroundColor: colorScheme.primary,
+        elevation: 0,
+        titleTextStyle: GoogleFonts.vt323(
           fontSize: 20,
           fontWeight: FontWeight.bold,
+          color: colorScheme.primary,
         ),
-        
-        // Titles
-        titleLarge: TextStyle(
-          fontFamily: 'PixelifySans',
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
+        iconTheme: IconThemeData(
+          color: colorScheme.primary,
         ),
-        titleMedium: TextStyle(
-          fontFamily: 'PixelifySans',
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-        ),
-        titleSmall: TextStyle(
-          fontFamily: 'PixelifySans',
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
-        ),
-        
-        // Body text - using Inter for readability in sensitive content
-        bodyLarge: TextStyle(
-          fontFamily: 'Inter',
-          fontSize: 16,
-        ),
-        bodyMedium: TextStyle(
-          fontFamily: 'Inter',
-          fontSize: 14,
-        ),
-        bodySmall: TextStyle(
-          fontFamily: 'Inter',
-          fontSize: 12,
-        ),
-        
-        // Labels
-        labelLarge: TextStyle(
-          fontFamily: 'PixelifySans',
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-        ),
-        labelMedium: TextStyle(
-          fontFamily: 'PixelifySans',
-          fontSize: 14,
-          fontWeight: FontWeight.bold,
-        ),
-        labelSmall: TextStyle(
-          fontFamily: 'PixelifySans',
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-        ),
-      ).apply(
-        displayColor: Colors.white,
-        bodyColor: Colors.white,
-        decorationColor: Colors.white,
       ),
       
       // Elevated Button Theme
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
-            if (states.contains(MaterialState.disabled)) {
+          backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+            if (states.contains(WidgetState.disabled)) {
               return const Color(0xFF9B87F5).withOpacity(0.5);
             }
             return const Color(0xFF9B87F5);
           }),
-          foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-          elevation: MaterialStateProperty.all<double>(2),
-          padding: MaterialStateProperty.all<EdgeInsets>(
+          foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
+          elevation: WidgetStateProperty.all<double>(2),
+          padding: WidgetStateProperty.all<EdgeInsets>(
             const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           ),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -487,14 +428,14 @@ class AppTheme {
       // Outlined Button Theme
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: ButtonStyle(
-          foregroundColor: MaterialStateProperty.all<Color>(const Color(0xFFD946EF)),
-          side: MaterialStateProperty.all<BorderSide>(
+          foregroundColor: WidgetStateProperty.all<Color>(const Color(0xFFD946EF)),
+          side: WidgetStateProperty.all<BorderSide>(
             const BorderSide(color: Color(0xFFD946EF), width: 2),
           ),
-          padding: MaterialStateProperty.all<EdgeInsets>(
+          padding: WidgetStateProperty.all<EdgeInsets>(
             const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           ),
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -505,11 +446,11 @@ class AppTheme {
       // Text Button Theme
       textButtonTheme: TextButtonThemeData(
         style: ButtonStyle(
-          foregroundColor: MaterialStateProperty.all<Color>(const Color(0xFF9B87F5)),
-          padding: MaterialStateProperty.all<EdgeInsets>(
+          foregroundColor: WidgetStateProperty.all<Color>(const Color(0xFF9B87F5)),
+          padding: WidgetStateProperty.all<EdgeInsets>(
             const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           ),
-          textStyle: MaterialStateProperty.all<TextStyle>(
+          textStyle: WidgetStateProperty.all<TextStyle>(
             const TextStyle(
               fontFamily: 'PixelifySans',
               fontWeight: FontWeight.bold,
@@ -574,14 +515,14 @@ class AppTheme {
       
       // Switch Theme
       switchTheme: SwitchThemeData(
-        thumbColor: MaterialStateProperty.resolveWith<Color>((states) {
-          if (states.contains(MaterialState.selected)) {
+        thumbColor: WidgetStateProperty.resolveWith<Color>((states) {
+          if (states.contains(WidgetState.selected)) {
             return const Color(0xFF9B87F5);
           }
           return const Color(0xFF6B7280);
         }),
-        trackColor: MaterialStateProperty.resolveWith<Color>((states) {
-          if (states.contains(MaterialState.selected)) {
+        trackColor: WidgetStateProperty.resolveWith<Color>((states) {
+          if (states.contains(WidgetState.selected)) {
             return const Color(0xFF9B87F5).withOpacity(0.5);
           }
           return const Color(0xFF6B7280).withOpacity(0.5);
@@ -590,13 +531,13 @@ class AppTheme {
       
       // Checkbox Theme
       checkboxTheme: CheckboxThemeData(
-        fillColor: MaterialStateProperty.resolveWith<Color>((states) {
-          if (states.contains(MaterialState.selected)) {
+        fillColor: WidgetStateProperty.resolveWith<Color>((states) {
+          if (states.contains(WidgetState.selected)) {
             return const Color(0xFF9B87F5);
           }
           return Colors.transparent;
         }),
-        checkColor: MaterialStateProperty.all(Colors.white),
+        checkColor: WidgetStateProperty.all(Colors.white),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4),
         ),
@@ -624,7 +565,7 @@ class AppTheme {
 class AppGradients {
   // Dark theme gradients
   static const purpleToPink = LinearGradient(
-    colors: [Color(0xFF9B87F5), Color(0xFFD946EF)],
+    colors: [Color(0xFF2BBEAA), Color(0xFF75E5D9)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
@@ -636,7 +577,7 @@ class AppGradients {
   );
 
   static const purpleToBlue = LinearGradient(
-    colors: [Color(0xFF9B87F5), Color(0xFF0EA5E9)],
+    colors: [Color(0xFF2BBEAA), Color(0xFF0EA5E9)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
@@ -668,6 +609,12 @@ class AppGradients {
   
   static const cardBackground = LinearGradient(
     colors: [Color(0xFFFFFFFF), Color(0xFFE0F2EF)],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+  );
+  
+  static const warningGradient = LinearGradient(
+    colors: [Color(0xFFFEE2E2), Color(0xFFFECACA)],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
   );

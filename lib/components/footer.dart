@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class Footer extends StatelessWidget {
-  const Footer({Key? key}) : super(key: key);
+  const Footer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -47,18 +47,19 @@ class Footer extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(12),
                       color: colorScheme.primary,
                     ),
-                    child: Icon(
-                      Icons.gamepad,
+                    child: Image.asset(
+                      'assets/logo/logo.png',
+                      width: 32,
+                      height: 32,
                       color: colorScheme.onPrimary,
-                      size: 24,
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 16),
                   Text(
                     'Learn, Play, Level Up',
                     style: TextStyle(
@@ -147,18 +148,19 @@ class Footer extends StatelessWidget {
         Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(12),
                 color: colorScheme.primary,
               ),
-              child: Icon(
-                Icons.gamepad,
+              child: Image.asset(
+                'assets/logo/logo.png',
+                width: 32,
+                height: 32,
                 color: colorScheme.onPrimary,
-                size: 24,
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 16),
             Text(
               'Learn, Play, Level Up',
               style: TextStyle(
@@ -262,7 +264,7 @@ class Footer extends StatelessWidget {
               ),
             ),
           ),
-        )).toList(),
+        )),
       ],
     );
   }

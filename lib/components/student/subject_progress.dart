@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:learn_play_level_up_flutter/theme/app_theme.dart';
 
 class SubjectProgress extends StatelessWidget {
   final List<Map<String, dynamic>> subjects;

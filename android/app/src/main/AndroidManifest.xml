@@ -1,7 +1,6 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.learnandplay.app">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="Learn &amp; Play"
+        android:label="learn_play"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

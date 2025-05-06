@@ -1,94 +1,42 @@
-# Learn, Play, Level Up - Flutter Version
+# Learn & Play
 
-This is a Flutter implementation of the Learn, Play, Level Up React web application. The app provides an educational gaming platform for students and teachers, featuring interactive gameplay and progress tracking.
+An educational gaming platform for teachers and students.
 
 ## Features
 
-- Interactive educational games
-- Student and teacher dashboards
-- Game creation tools for teachers
-- Progress tracking and achievement awards
-- Responsive design for mobile and desktop
+- Teacher dashboard for creating and managing educational games
+- Student dashboard for playing games and tracking progress
+- Multiple game templates: true/false, drag & drop, matching, etc.
+- Real-time analytics for teachers
 
-## Getting Started
+## Setup
 
-### Prerequisites
+1. Install Flutter (version 3.6.0 or higher)
+2. Clone the repository
+3. Run `flutter pub get` to install dependencies
+4. Run `flutter pub run build_runner build --delete-conflicting-outputs` to generate Freezed model files
+5. Connect Firebase services
+6. Run the app with `flutter run`
 
-- Flutter SDK (version 3.19.0 or higher)
-- Dart SDK (version 3.3.0 or higher)
-- Android Studio / VS Code with Flutter plugins
-- Android Emulator / iOS Simulator for mobile testing
+## Firebase Configuration
 
-### Installation
+This app requires Firebase services:
+- Authentication
+- Firestore Database
+- (Optional) Analytics
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/learn_play_level_up_flutter.git
-   cd learn_play_level_up_flutter
-   ```
+## Models
 
-2. Install dependencies:
-   ```bash
-   flutter pub get
-   ```
+The app uses Freezed for immutable models and JSON serialization:
 
-3. Run the app:
-   ```bash
-   flutter run
-   ```
+- **AppUser**: User data model with roles (teacher/student)
+- **Game**: Game template data with various question types
+- **GameCompletion**: Records of completed games with scores
 
-   For web deployment:
-   ```bash
-   flutter run -d chrome
-   ```
+## Building
 
-### Building for Production
-
-To build a release version of the app:
+To generate the Freezed models after making changes:
 
 ```bash
-# For Android
-flutter build apk --release
-
-# For iOS
-flutter build ios --release
-
-# For web
-flutter build web --release
+flutter pub run build_runner build --delete-conflicting-outputs
 ```
-
-## Project Structure
-
-- `lib/` - Contains all Dart code
-  - `components/` - Reusable UI components
-  - `models/` - Data models
-  - `pages/` - Application screens
-  - `services/` - API and backend services
-  - `theme/` - App theme and styling
-  - `utils/` - Utility functions
-
-## Technology Stack
-
-- **Flutter** - UI framework
-- **Provider & Riverpod** - State management
-- **Go Router** - Navigation and routing
-- **Dio/Http** - API communication
-- **Google Fonts** - Typography
-- **Flutter Hooks** - Stateful logic
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgments
-
-- Original React app by Lovable.dev
-- Flutter team for the amazing framework

@@ -1,21 +1,40 @@
 {
   "project_info": {
-    "project_number": "59318045507",
-    "project_id": "gamifying-k-12-education",
-    "storage_bucket": "gamifying-k-12-education.firebasestorage.app"
+    "project_number": "635834405606",
+    "project_id": "learn-play-87448",
+    "storage_bucket": "learn-play-87448.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:59318045507:android:0b8ce6d5c28b257819bdf6",
+        "mobilesdk_app_id": "1:635834405606:android:6d867e8ecaa36ef0966127",
         "android_client_info": {
-          "package_name": "com.learnandplay.app"
+          "package_name": "com.example.learn_play"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBbgmDnqbKUyk_ZFoISxfQg7jW6T_-y2og"
+          "current_key": "AIzaSyDUc0a3ErhA-d6wVc8UnZt02yTY0A5vQSI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:635834405606:android:a52601f4d6c0010b966127",
+        "android_client_info": {
+          "package_name": "com.example.learnandplay"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUc0a3ErhA-d6wVc8UnZt02yTY0A5vQSI"
         }
       ],
       "services": {

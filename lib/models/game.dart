@@ -1,218 +1,54 @@
-class Game {
-  final String id;
-  final String title;
-  final String description;
-  final String? coverImage;
-  final String authorId;
-  final String authorName;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final List<String> tags;
-  final String category;
-  final int difficultyLevel; // 1-5 scale
-  final int minAge;
-  final int maxAge;
-  final int estimatedDuration; // in minutes
-  final List<GameQuestion> questions;
-  final bool isPublished;
-  final int playCount;
-  final double averageRating;
-  final List<GameReview>? reviews;
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'question.dart';
 
-  Game({
-    required this.id,
-    required this.title,
-    required this.description,
-    this.coverImage,
-    required this.authorId,
-    required this.authorName,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.tags,
-    required this.category,
-    required this.difficultyLevel,
-    required this.minAge,
-    required this.maxAge,
-    required this.estimatedDuration,
-    required this.questions,
-    required this.isPublished,
-    required this.playCount,
-    required this.averageRating,
-    this.reviews,
-  });
+part 'game.freezed.dart';
+part 'game.g.dart';
 
-  factory Game.fromJson(Map<String, dynamic> json) {
-    final List<dynamic> questionsJson = json['questions'] ?? [];
-    final List<GameQuestion> questionsList = questionsJson
-        .map((q) => GameQuestion.fromJson(q))
-        .toList();
-
-    final List<dynamic> reviewsJson = json['reviews'] ?? [];
-    final List<GameReview> reviewsList = reviewsJson
-        .map((r) => GameReview.fromJson(r))
-        .toList();
-
-    return Game(
-      id: json['id'],
-      title: json['title'],
-      description: json['description'],
-      coverImage: json['coverImage'],
-      authorId: json['authorId'],
-      authorName: json['authorName'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
-      tags: List<String>.from(json['tags'] ?? []),
-      category: json['category'],
-      difficultyLevel: json['difficultyLevel'],
-      minAge: json['minAge'],
-      maxAge: json['maxAge'],
-      estimatedDuration: json['estimatedDuration'],
-      questions: questionsList,
-      isPublished: json['isPublished'] ?? false,
-      playCount: json['playCount'] ?? 0,
-      averageRating: (json['averageRating'] ?? 0).toDouble(),
-      reviews: reviewsList.isEmpty ? null : reviewsList,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'title': title,
-      'description': description,
-      'coverImage': coverImage,
-      'authorId': authorId,
-      'authorName': authorName,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
-      'tags': tags,
-      'category': category,
-      'difficultyLevel': difficultyLevel,
-      'minAge': minAge,
-      'maxAge': maxAge,
-      'estimatedDuration': estimatedDuration,
-      'questions': questions.map((q) => q.toJson()).toList(),
-      'isPublished': isPublished,
-      'playCount': playCount,
-      'averageRating': averageRating,
-      'reviews': reviews?.map((r) => r.toJson()).toList(),
-    };
-  }
+/// All eight templates, exactly as before.
+enum GameTemplate {
+  trueFalse,
+  dragDrop,
+  matching,
+  memory,
+  flashCard,
+  fillBlank,
+  hangman,
+  crossword,
 }
 
-class GameQuestion {
-  final String id;
-  final String text;
-  final List<GameQuestionOption> options;
-  final int points;
-  final String? imageUrl;
-  final int timeLimit; // in seconds
+@freezed
+abstract class Game with _$Game {
+  const factory Game({
+    required String id,
+    required String ownerUid,
+    
+    @JsonKey(fromJson: _templateFromJson, toJson: _templateToJson)
+    required GameTemplate template,
+    
+    required String title,
+    required List<int> gradeYears,
+    required String subject,
 
-  GameQuestion({
-    required this.id,
-    required this.text,
-    required this.options,
-    required this.points,
-    this.imageUrl,
-    required this.timeLimit,
-  });
+    /// We ignore this in JSON so the generator doesn't fail on the union type.
+    @Default(<GameQuestion>[])
+    @JsonKey(ignore: true)
+    List<GameQuestion> questions,
 
-  factory GameQuestion.fromJson(Map<String, dynamic> json) {
-    final List<dynamic> optionsJson = json['options'] ?? [];
-    final List<GameQuestionOption> optionsList = optionsJson
-        .map((o) => GameQuestionOption.fromJson(o))
-        .toList();
+    @Default(false) bool isTutorial,
+    
+    @JsonKey(fromJson: _tsFromJson, toJson: _tsToJson)
+    required DateTime createdAt,
+  }) = _Game;
 
-    return GameQuestion(
-      id: json['id'],
-      text: json['text'],
-      options: optionsList,
-      points: json['points'] ?? 1,
-      imageUrl: json['imageUrl'],
-      timeLimit: json['timeLimit'] ?? 30,
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'text': text,
-      'options': options.map((o) => o.toJson()).toList(),
-      'points': points,
-      'imageUrl': imageUrl,
-      'timeLimit': timeLimit,
-    };
-  }
+  factory Game.fromJson(Map<String, dynamic> json) => _$GameFromJson(json);
 }
 
-class GameQuestionOption {
-  final String id;
-  final String text;
-  final bool isCorrect;
-  final String? explanation;
+DateTime _tsFromJson(Timestamp t) => t.toDate();
+Timestamp _tsToJson(DateTime dt) => Timestamp.fromDate(dt);
 
-  GameQuestionOption({
-    required this.id,
-    required this.text,
-    required this.isCorrect,
-    this.explanation,
-  });
-
-  factory GameQuestionOption.fromJson(Map<String, dynamic> json) {
-    return GameQuestionOption(
-      id: json['id'],
-      text: json['text'],
-      isCorrect: json['isCorrect'] ?? false,
-      explanation: json['explanation'],
+GameTemplate _templateFromJson(String value) => GameTemplate.values.firstWhere(
+      (e) => e.toString() == 'GameTemplate.$value',
+      orElse: () => GameTemplate.trueFalse,
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'text': text,
-      'isCorrect': isCorrect,
-      'explanation': explanation,
-    };
-  }
-}
-
-class GameReview {
-  final String id;
-  final String userId;
-  final String userName;
-  final int rating; // 1-5 scale
-  final String? comment;
-  final DateTime createdAt;
-
-  GameReview({
-    required this.id,
-    required this.userId,
-    required this.userName,
-    required this.rating,
-    this.comment,
-    required this.createdAt,
-  });
-
-  factory GameReview.fromJson(Map<String, dynamic> json) {
-    return GameReview(
-      id: json['id'],
-      userId: json['userId'],
-      userName: json['userName'],
-      rating: json['rating'],
-      comment: json['comment'],
-      createdAt: DateTime.parse(json['createdAt']),
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'userId': userId,
-      'userName': userName,
-      'rating': rating,
-      'comment': comment,
-      'createdAt': createdAt.toIso8601String(),
-    };
-  }
-} 
+String _templateToJson(GameTemplate template) => template.toString().split('.').last;

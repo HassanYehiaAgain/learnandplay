@@ -1,6 +1,6 @@
 {
-    "name": "learn_play_level_up_flutter",
-    "short_name": "learn_play_level_up_flutter",
+    "name": "learn_play",
+    "short_name": "learn_play",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

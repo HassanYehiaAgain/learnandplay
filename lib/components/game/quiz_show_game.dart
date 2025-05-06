@@ -22,7 +22,7 @@ class QuizShowGameView extends StatefulWidget {
 class _QuizShowGameViewState extends State<QuizShowGameView> with TickerProviderStateMixin {
   // Game state
   int _score = 0;
-  Set<String> _answeredQuestionIds = {};
+  final Set<String> _answeredQuestionIds = {};
   DateTime? _startTime;
   DateTime? _endTime;
   
@@ -362,7 +362,7 @@ class _QuizShowGameViewState extends State<QuizShowGameView> with TickerProvider
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
             color: isAnswered 
-                ? colorScheme.surfaceVariant.withOpacity(0.5)
+                ? colorScheme.surfaceContainerHighest.withOpacity(0.5)
                 : colorScheme.secondaryContainer,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
@@ -660,7 +660,7 @@ class _QuizShowGameViewState extends State<QuizShowGameView> with TickerProvider
                 const SizedBox(height: 4),
                 LinearProgressIndicator(
                   value: _answeredQuestionIds.length / _getTotalQuestionCount(),
-                  backgroundColor: colorScheme.surfaceVariant,
+                  backgroundColor: colorScheme.surfaceContainerHighest,
                   color: colorScheme.primary,
                 ),
               ],

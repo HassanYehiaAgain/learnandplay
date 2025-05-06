@@ -27,7 +27,7 @@ class GameCreatorPage extends StatefulWidget {
 class _GameCreatorPageState extends State<GameCreatorPage> {
   bool _showTemplateSelection = true;
   String? _selectedTemplate;
-  bool _isLoading = false;
+  final bool _isLoading = false;
   bool _isSaving = false;
   
   // Mock teacher ID and subject until we have authentication
@@ -346,9 +346,9 @@ class _GameCreatorPageState extends State<GameCreatorPage> {
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
-              Text(
+              const Text(
                 'This game template will be available soon',
-                style: const TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 16),
                 textAlign: TextAlign.center,
               ),
             ],

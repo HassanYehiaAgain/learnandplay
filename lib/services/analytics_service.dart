@@ -654,7 +654,7 @@ class AnalyticsService {
           // Create new question analytics
           final newAnalytics = QuestionAnalytics(
             questionId: questionId,
-            questionText: 'Question #' + questionId, // Adding default text
+            questionText: 'Question #$questionId', // Adding default text
             subject: session.subjectId, // Using subjectId as subject
             gameId: session.gameId,
             timesAttempted: 1,

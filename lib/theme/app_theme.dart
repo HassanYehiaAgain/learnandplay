@@ -106,8 +106,6 @@ class AppTheme {
     onInverseSurface: Colors.white,
     inversePrimary: teal.withOpacity(0.9),
     surfaceTint: teal.withOpacity(0.03),
-    background: offWhite,
-    onBackground: darkGrey,
   );
 
   // Dark color scheme - keeping for reference
@@ -140,9 +138,7 @@ class AppTheme {
     inverseSurface: Colors.white,
     onInverseSurface: const Color(0xFF1F2937), // Dark gray
     inversePrimary: const Color(0xFF9B87F5), // Purple
-    surfaceTint: const Color(0xFF9B87F5), // Purple
-    background: const Color(0xFF121212),
-    onBackground: Colors.white,
+    surfaceTint: const Color(0xFF9B87F5),
   );
 
   // Gradients
@@ -237,7 +233,7 @@ class AppTheme {
         style: ButtonStyle(
           foregroundColor: WidgetStateProperty.all<Color>(orange),
           side: WidgetStateProperty.all<BorderSide>(
-            BorderSide(color: orange, width: 2),
+            const BorderSide(color: orange, width: 2),
           ),
           padding: WidgetStateProperty.all<EdgeInsets>(
             const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
@@ -303,15 +299,15 @@ class AppTheme {
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: lightGrey, width: 1),
+          borderSide: const BorderSide(color: lightGrey, width: 1),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: lightGrey, width: 1),
+          borderSide: const BorderSide(color: lightGrey, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: teal, width: 2),
+          borderSide: const BorderSide(color: teal, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -323,7 +319,7 @@ class AppTheme {
       dividerColor: lightGrey,
       
       // Icon Theme
-      iconTheme: IconThemeData(
+      iconTheme: const IconThemeData(
         color: mediumGrey,
         size: 24,
       ),
@@ -356,19 +352,19 @@ class AppTheme {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4),
         ),
-        side: BorderSide(color: mediumGrey),
+        side: const BorderSide(color: mediumGrey),
       ),
       
       // Tab Bar Theme
-      tabBarTheme: TabBarTheme(
+      tabBarTheme: const TabBarTheme(
         labelColor: teal,
         unselectedLabelColor: mediumGrey,
         indicatorColor: teal,
-        labelStyle: const TextStyle(
+        labelStyle: TextStyle(
           fontFamily: 'PixelifySans',
           fontWeight: FontWeight.bold,
         ),
-        unselectedLabelStyle: const TextStyle(
+        unselectedLabelStyle: TextStyle(
           fontFamily: 'PixelifySans',
         ),
       ),
@@ -383,7 +379,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: colorScheme.background,
+      scaffoldBackgroundColor: colorScheme.surface,
       textTheme: baseTextTheme.apply(
         displayColor: colorScheme.onSurface,
         bodyColor: colorScheme.onSurface,
@@ -621,14 +617,14 @@ class AppGradients {
 }
 
 // Text styles - keeping for reference
-final headlineTextStyle = TextStyle(
+final headlineTextStyle = const TextStyle(
   fontFamily: 'PressStart2P',
   fontWeight: FontWeight.bold,
   height: 1.2,
   letterSpacing: -0.5,
 );
 
-final bodyTextStyle = TextStyle(
+final bodyTextStyle = const TextStyle(
   fontFamily: 'Inter',
   fontSize: 16,
   height: 1.5,
@@ -636,20 +632,20 @@ final bodyTextStyle = TextStyle(
 );
 
 // Use PixelifySans for more elements
-final buttonTextStyle = TextStyle(
+final buttonTextStyle = const TextStyle(
   fontFamily: 'PixelifySans',
   fontWeight: FontWeight.bold,
   letterSpacing: 0.5,
 );
 
-final titleTextStyle = TextStyle(
+final titleTextStyle = const TextStyle(
   fontFamily: 'PixelifySans',
   fontWeight: FontWeight.bold,
   height: 1.3,
   letterSpacing: 0.3,
 );
 
-final subtitleTextStyle = TextStyle(
+final subtitleTextStyle = const TextStyle(
   fontFamily: 'PixelifySans',
   height: 1.3,
   letterSpacing: 0.2,

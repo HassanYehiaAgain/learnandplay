@@ -233,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        body: Center(
+        body: const Center(
           child: Text('Home Screen Content Here'),
         ),
       ),

@@ -257,7 +257,7 @@ class _PodiumPosition extends StatelessWidget {
         height: height,
         margin: const EdgeInsets.symmetric(horizontal: 4),
         decoration: BoxDecoration(
-          color: colorScheme.surfaceVariant.withOpacity(0.5),
+          color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(8),
             topRight: Radius.circular(8),
@@ -442,7 +442,7 @@ class _LeaderboardEntryTile extends StatelessWidget {
           height: 40,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: rankColor ?? colorScheme.surfaceVariant,
+            color: rankColor ?? colorScheme.surfaceContainerHighest,
             boxShadow: rankColor != null
                 ? [
                     BoxShadow(
@@ -527,7 +527,7 @@ class LeaderboardTabSelector extends StatelessWidget {
               margin: const EdgeInsets.only(right: 12),
               padding: const EdgeInsets.symmetric(horizontal: 20),
               decoration: BoxDecoration(
-                color: isSelected ? colorScheme.primary : colorScheme.surfaceVariant,
+                color: isSelected ? colorScheme.primary : colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: isSelected
                     ? [

@@ -344,7 +344,7 @@ class AppButton extends StatelessWidget {
         children: [
           if (leadingIcon != null) ...[
             Icon(leadingIcon, size: fontSize[size]),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
           ],
           Text(
             text,
@@ -354,7 +354,7 @@ class AppButton extends StatelessWidget {
             ),
           ),
           if (trailingIcon != null) ...[
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Icon(trailingIcon, size: fontSize[size]),
           ],
         ],
@@ -438,7 +438,7 @@ class GradientButton extends StatelessWidget {
         children: [
           if (leadingIcon != null) ...[
             Icon(leadingIcon, size: fontSize, color: Colors.white),
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
           ],
           Text(
             text,
@@ -449,7 +449,7 @@ class GradientButton extends StatelessWidget {
             ),
           ),
           if (trailingIcon != null) ...[
-            SizedBox(width: 8),
+            const SizedBox(width: 8),
             Icon(trailingIcon, size: fontSize, color: Colors.white),
           ],
         ],

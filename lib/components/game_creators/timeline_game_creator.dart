@@ -572,12 +572,12 @@ class _TimelineGameCreatorState extends State<TimelineGameCreator> {
                       });
                     },
                   ),
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Easy'),
-                      const Text('Medium'),
-                      const Text('Hard'),
+                      Text('Easy'),
+                      Text('Medium'),
+                      Text('Hard'),
                     ],
                   ),
                   const SizedBox(height: 16),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:learn_play_level_up_flutter/providers/accessibility_provider.dart';
-import 'package:learn_play_level_up_flutter/providers/game_analytics_provider.dart';
 import 'package:learn_play_level_up_flutter/widgets/common/loading_indicator.dart';
 import 'package:learn_play_level_up_flutter/widgets/common/error_display.dart';
 

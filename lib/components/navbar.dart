@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:learn_play_level_up_flutter/components/ui/button.dart';
-import 'package:learn_play_level_up_flutter/theme/app_theme.dart';
-import 'package:learn_play_level_up_flutter/components/ui/pixel_button.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:learn_play_level_up_flutter/models/user.dart';
 
 /// A simplified Navbar component that doesn't use Provider or Riverpod
 /// It accepts all necessary props directly to avoid dependency conflicts

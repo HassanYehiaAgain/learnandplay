@@ -57,9 +57,9 @@ class StreakCalendar extends StatelessWidget {
         const SizedBox(height: 8),
         
         // Weekday headers
-        Row(
+        const Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: const [
+          children: [
             _WeekdayLabel('Mon'),
             _WeekdayLabel('Tue'),
             _WeekdayLabel('Wed'),
@@ -243,7 +243,7 @@ class StreakMilestone extends StatelessWidget {
       decoration: BoxDecoration(
         color: isCompleted
             ? Colors.orange.withOpacity(0.2)
-            : colorScheme.surfaceVariant.withOpacity(0.3),
+            : colorScheme.surfaceContainerHighest.withOpacity(0.3),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isCompleted ? Colors.orange : colorScheme.outline.withOpacity(0.2),
@@ -277,7 +277,7 @@ class StreakMilestone extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
               value: progress,
-              backgroundColor: colorScheme.surfaceVariant,
+              backgroundColor: colorScheme.surfaceContainerHighest,
               color: Colors.orange,
               minHeight: 8,
             ),
@@ -296,7 +296,7 @@ class StreakMilestone extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: isCompleted ? Colors.orange.withOpacity(0.1) : colorScheme.surfaceVariant,
+              color: isCompleted ? Colors.orange.withOpacity(0.1) : colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
                 color: isCompleted ? Colors.orange : colorScheme.outline.withOpacity(0.2),
@@ -479,7 +479,7 @@ class _WeekdayCircle extends StatelessWidget {
             ? Colors.orange
             : isToday
                 ? colorScheme.primaryContainer
-                : colorScheme.surfaceVariant,
+                : colorScheme.surfaceContainerHighest,
         border: isToday && !isCompleted
             ? Border.all(color: colorScheme.primary, width: 2)
             : null,

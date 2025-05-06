@@ -279,7 +279,7 @@ class _StudentAnalyticsPageState extends State<StudentAnalyticsPage> with Single
                           child: LinearProgressIndicator(
                             value: _gamificationService.getProgressToNextLevel(_userProgress!.totalXp),
                             minHeight: 8,
-                            backgroundColor: colorScheme.surfaceVariant,
+                            backgroundColor: colorScheme.surfaceContainerHighest,
                             color: colorScheme.primary,
                           ),
                         ),
@@ -453,7 +453,7 @@ class _StudentAnalyticsPageState extends State<StudentAnalyticsPage> with Single
               child: LinearProgressIndicator(
                 value: subject.masteryPercentage / 100,
                 minHeight: 6,
-                backgroundColor: colorScheme.surfaceVariant,
+                backgroundColor: colorScheme.surfaceContainerHighest,
                 color: _getColorForMastery(subject.masteryPercentage),
               ),
             ),
@@ -677,7 +677,7 @@ class _StudentAnalyticsPageState extends State<StudentAnalyticsPage> with Single
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      '${_formatDuration(game.durationSeconds.toDouble())}',
+                      _formatDuration(game.durationSeconds.toDouble()),
                       style: TextStyle(
                         fontSize: 12,
                         color: colorScheme.onSurfaceVariant,
@@ -798,7 +798,7 @@ class _StudentAnalyticsPageState extends State<StudentAnalyticsPage> with Single
                           child: LinearProgressIndicator(
                             value: _gamificationService.getProgressToNextLevel(_userProgress!.totalXp),
                             minHeight: 8,
-                            backgroundColor: colorScheme.surfaceVariant,
+                            backgroundColor: colorScheme.surfaceContainerHighest,
                             color: colorScheme.primary,
                           ),
                         ),
@@ -1053,7 +1053,7 @@ class _StudentAnalyticsPageState extends State<StudentAnalyticsPage> with Single
                     const SizedBox(height: 16),
                     const Divider(),
                     const SizedBox(height: 8),
-                    Text(
+                    const Text(
                       'Recent Rewards',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
@@ -1082,7 +1082,7 @@ class _StudentAnalyticsPageState extends State<StudentAnalyticsPage> with Single
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(
+                              const Icon(
                                 Icons.star,
                                 size: 16,
                                 color: Colors.amber,
@@ -1090,7 +1090,7 @@ class _StudentAnalyticsPageState extends State<StudentAnalyticsPage> with Single
                               const SizedBox(width: 4),
                               Text('+${(game.scorePercentage / 10).round()} XP'),
                               const SizedBox(width: 8),
-                              Icon(
+                              const Icon(
                                 Icons.monetization_on,
                                 size: 16,
                                 color: Colors.amber,
@@ -1167,7 +1167,7 @@ class _StudentAnalyticsPageState extends State<StudentAnalyticsPage> with Single
           decoration: BoxDecoration(
             color: isActive 
                 ? Colors.orange.shade700
-                : colorScheme.surfaceVariant.withOpacity(0.3),
+                : colorScheme.surfaceContainerHighest.withOpacity(0.3),
             shape: BoxShape.circle,
           ),
           child: Center(
@@ -1211,7 +1211,7 @@ class _StudentAnalyticsPageState extends State<StudentAnalyticsPage> with Single
               decoration: BoxDecoration(
                 color: userBadge.isCompleted 
                     ? colorScheme.primaryContainer
-                    : colorScheme.surfaceVariant.withOpacity(0.5),
+                    : colorScheme.surfaceContainerHighest.withOpacity(0.5),
                 shape: BoxShape.circle,
               ),
               child: Center(
@@ -1242,7 +1242,7 @@ class _StudentAnalyticsPageState extends State<StudentAnalyticsPage> with Single
             const SizedBox(height: 4),
             // Progress or completion
             if (userBadge.isCompleted)
-              Row(
+              const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
@@ -1250,7 +1250,7 @@ class _StudentAnalyticsPageState extends State<StudentAnalyticsPage> with Single
                     size: 12,
                     color: Colors.green,
                   ),
-                  const SizedBox(width: 4),
+                  SizedBox(width: 4),
                   Text(
                     'Completed',
                     style: TextStyle(
@@ -1276,7 +1276,7 @@ class _StudentAnalyticsPageState extends State<StudentAnalyticsPage> with Single
                     child: LinearProgressIndicator(
                       value: userBadge.progress / 100,
                       minHeight: 4,
-                      backgroundColor: colorScheme.surfaceVariant,
+                      backgroundColor: colorScheme.surfaceContainerHighest,
                       color: colorScheme.primary,
                     ),
                   ),
@@ -1297,7 +1297,7 @@ class _StudentAnalyticsPageState extends State<StudentAnalyticsPage> with Single
     
     return Card(
       elevation: 1,
-      color: colorScheme.surfaceVariant.withOpacity(0.3),
+      color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
@@ -1311,7 +1311,7 @@ class _StudentAnalyticsPageState extends State<StudentAnalyticsPage> with Single
               width: 56,
               height: 56,
               decoration: BoxDecoration(
-                color: colorScheme.surfaceVariant.withOpacity(0.5),
+                color: colorScheme.surfaceContainerHighest.withOpacity(0.5),
                 shape: BoxShape.circle,
               ),
               child: Center(

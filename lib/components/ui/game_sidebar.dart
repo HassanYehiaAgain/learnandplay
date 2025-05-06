@@ -219,7 +219,7 @@ class _GameSidebarState extends State<GameSidebar> with SingleTickerProviderStat
           Container(
             width: 40,
             height: 40,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               shape: BoxShape.circle,
               gradient: AppGradients.orangeToYellow,
             ),
@@ -367,7 +367,6 @@ class _SidebarNavItem extends StatefulWidget {
   final Animation<double> animation;
 
   const _SidebarNavItem({
-    super.key,
     required this.title,
     required this.icon,
     required this.path,

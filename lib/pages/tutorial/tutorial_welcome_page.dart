@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:learn_play_level_up_flutter/services/tutorial_service.dart';
-import 'package:learn_play_level_up_flutter/models/tutorial_models.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 

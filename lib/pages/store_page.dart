@@ -264,7 +264,7 @@ class StoreItemCard extends StatelessWidget {
             flex: 3,
             child: Container(
               decoration: BoxDecoration(
-                color: colorScheme.surfaceVariant,
+                color: colorScheme.surfaceContainerHighest,
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
               ),
               padding: const EdgeInsets.all(12),
@@ -313,7 +313,7 @@ class StoreItemCard extends StatelessWidget {
                       // Price
                       Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.monetization_on,
                             color: Colors.amber,
                             size: 16,

@@ -1,28 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 // Import Firebase
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:learn_play_level_up_flutter/firebase_init.dart';
 
-import 'package:learn_play_level_up_flutter/pages/create_game_page.dart';
-import 'package:learn_play_level_up_flutter/pages/game_library_page.dart';
-import 'package:learn_play_level_up_flutter/pages/game_page.dart';
-import 'package:learn_play_level_up_flutter/pages/home_page.dart';
-import 'package:learn_play_level_up_flutter/pages/not_found_page.dart';
-import 'package:learn_play_level_up_flutter/pages/register_page.dart';
-import 'package:learn_play_level_up_flutter/pages/sign_in_page.dart';
-import 'package:learn_play_level_up_flutter/pages/student_page.dart';
-import 'package:learn_play_level_up_flutter/pages/teacher_page.dart';
 import 'package:learn_play_level_up_flutter/router/app_router.dart';
 import 'package:learn_play_level_up_flutter/theme/app_theme.dart';
 import 'package:learn_play_level_up_flutter/theme/theme_provider.dart';
 import 'package:provider/provider.dart' as provider;
 import 'package:learn_play_level_up_flutter/services/auth_service.dart';
 import 'package:learn_play_level_up_flutter/services/firebase_service.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:learn_play_level_up_flutter/services/local_storage_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

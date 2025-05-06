@@ -72,7 +72,7 @@ class SubjectProgressCard extends StatelessWidget {
                       const SizedBox(height: 4),
                       Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.star,
                             size: 16,
                             color: Colors.amber,
@@ -104,7 +104,7 @@ class SubjectProgressCard extends StatelessWidget {
                     children: [
                       CircularProgressIndicator(
                         value: completionPercentage / 100,
-                        backgroundColor: colorScheme.surfaceVariant,
+                        backgroundColor: colorScheme.surfaceContainerHighest,
                         color: colorScheme.primary,
                         strokeWidth: 5,
                       ),
@@ -170,7 +170,7 @@ class _StatCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: colorScheme.surfaceVariant.withOpacity(0.3),
+        color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
@@ -267,10 +267,10 @@ class ProgressGraph extends StatelessWidget {
                   ),
                   titlesData: FlTitlesData(
                     show: true,
-                    rightTitles: AxisTitles(
+                    rightTitles: const AxisTitles(
                       sideTitles: SideTitles(showTitles: false),
                     ),
-                    topTitles: AxisTitles(
+                    topTitles: const AxisTitles(
                       sideTitles: SideTitles(showTitles: false),
                     ),
                     bottomTitles: AxisTitles(
@@ -496,11 +496,11 @@ class _SubjectMasteryCell extends StatelessWidget {
               height: 70,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: colorScheme.surfaceVariant.withOpacity(0.3),
+                color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
               ),
               child: CircularProgressIndicator(
                 value: percentage / 100,
-                backgroundColor: colorScheme.surfaceVariant,
+                backgroundColor: colorScheme.surfaceContainerHighest,
                 color: masteryColor,
                 strokeWidth: 8,
               ),
@@ -727,7 +727,7 @@ class _LearningPathNode extends StatelessWidget {
               decoration: BoxDecoration(
                 color: isActive
                     ? colorScheme.primaryContainer.withOpacity(0.2)
-                    : colorScheme.surfaceVariant.withOpacity(0.2),
+                    : colorScheme.surfaceContainerHighest.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: isActive ? colorScheme.primary : colorScheme.outlineVariant,
@@ -747,7 +747,7 @@ class _LearningPathNode extends StatelessWidget {
                           shape: BoxShape.circle,
                           color: isActive
                               ? colorScheme.primaryContainer
-                              : colorScheme.surfaceVariant,
+                              : colorScheme.surfaceContainerHighest,
                         ),
                         child: Center(
                           child: Image.asset(
@@ -800,7 +800,7 @@ class _LearningPathNode extends StatelessWidget {
                               ? Colors.green.withOpacity(0.1)
                               : isActive
                                   ? colorScheme.primary.withOpacity(0.1)
-                                  : colorScheme.surfaceVariant,
+                                  : colorScheme.surfaceContainerHighest,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
                             color: isComplete

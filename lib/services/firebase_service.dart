@@ -28,7 +28,7 @@ class FirebaseService {
     if (!docSnap.exists) return null;
     
     return FirebaseUser.fromFirestore(
-      docSnap as DocumentSnapshot<Map<String, dynamic>>, 
+      docSnap, 
       null
     );
   }
@@ -367,7 +367,7 @@ class FirebaseService {
       if (!docSnap.exists) return null;
       
       return FirebaseUser.fromFirestore(
-        docSnap as DocumentSnapshot<Map<String, dynamic>>, 
+        docSnap, 
         null
       );
     } catch (e) {

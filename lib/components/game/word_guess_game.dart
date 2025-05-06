@@ -299,7 +299,7 @@ class _WordGuessGameViewState extends State<WordGuessGameView> with TickerProvid
                   style: ElevatedButton.styleFrom(
                     foregroundColor: colorScheme.onSecondaryContainer,
                     backgroundColor: colorScheme.secondaryContainer,
-                    disabledBackgroundColor: colorScheme.surfaceVariant,
+                    disabledBackgroundColor: colorScheme.surfaceContainerHighest,
                     disabledForegroundColor: colorScheme.onSurfaceVariant,
                   ),
                 ),
@@ -477,7 +477,7 @@ class _WordGuessGameViewState extends State<WordGuessGameView> with TickerProvid
                 const SizedBox(height: 4),
                 LinearProgressIndicator(
                   value: (_currentWordIndex) / widget.gameData.puzzles.length,
-                  backgroundColor: colorScheme.surfaceVariant,
+                  backgroundColor: colorScheme.surfaceContainerHighest,
                   color: colorScheme.primary,
                 ),
               ],
@@ -649,7 +649,7 @@ class _WordGuessGameViewState extends State<WordGuessGameView> with TickerProvid
                   ? isCorrect
                       ? Colors.green.shade100
                       : Colors.red.shade100
-                  : colorScheme.surfaceVariant,
+                  : colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(4),
               border: Border.all(
                 color: isGuessed

@@ -242,8 +242,8 @@ class _SettingsTutorialsPageState extends State<SettingsTutorialsPage> {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (completed)
-              Padding(
-                padding: const EdgeInsets.only(right: 8.0),
+              const Padding(
+                padding: EdgeInsets.only(right: 8.0),
                 child: Icon(
                   Icons.check_circle,
                   color: Colors.green,

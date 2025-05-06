@@ -250,7 +250,7 @@ class AchievementCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       title,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontFamily: 'PixelifySans',
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -334,7 +334,7 @@ class TrophyCard extends StatelessWidget {
                   width: 80,
                   height: 80,
                   errorBuilder: (context, error, stackTrace) {
-                    return Icon(
+                    return const Icon(
                       Icons.emoji_events,
                       color: Colors.white,
                       size: 48,
@@ -345,7 +345,7 @@ class TrophyCard extends StatelessWidget {
               Text(
                 title,
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: 'PixelifySans',
                   fontSize: 16,
                   fontWeight: FontWeight.bold,

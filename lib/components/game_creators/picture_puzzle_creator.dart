@@ -492,12 +492,12 @@ class _PicturePuzzleGameCreatorState extends State<PicturePuzzleGameCreator> {
                       });
                     },
                   ),
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Easy'),
-                      const Text('Medium'),
-                      const Text('Hard'),
+                      Text('Easy'),
+                      Text('Medium'),
+                      Text('Hard'),
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -697,7 +697,7 @@ class _PicturePuzzleGameCreatorState extends State<PicturePuzzleGameCreator> {
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Grid Size: ${sqrt}x${sqrt}'),
+                            Text('Grid Size: ${sqrt}x$sqrt'),
                             Text('Points: ${puzzle.points}'),
                             if (puzzle.timeLimit != null)
                               Text('Time Limit: ${puzzle.timeLimit} seconds'),

@@ -268,7 +268,7 @@ class _WordScrambleCreationPageState extends State<WordScrambleCreationPage> {
                       children: [
                         Text('Hint: ${word.hint}'),
                         Text('Scrambled: $scrambled', 
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: Colors.purple,
                           ),

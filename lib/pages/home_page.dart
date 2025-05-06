@@ -696,9 +696,9 @@ class HomePage extends StatelessWidget {
           ).animate()
            .fadeIn(duration: 600.ms),
           const SizedBox(height: 16),
-          Text(
+          const Text(
             'Join thousands of teachers and students already transforming the classroom experience.',
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Inter',
               color: Colors.white,
               fontSize: 18,

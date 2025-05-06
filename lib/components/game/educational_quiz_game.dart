@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:learn_play_level_up_flutter/models/firebase_models.dart';
 import 'package:learn_play_level_up_flutter/components/ui/button.dart';
-import 'package:learn_play_level_up_flutter/theme/app_theme.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 class EducationalQuizGameView extends StatefulWidget {

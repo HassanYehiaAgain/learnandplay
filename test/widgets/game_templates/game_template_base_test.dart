@@ -35,7 +35,6 @@ void main() {
           ),
         ],
         child: GameTemplateBase(
-          child: child,
           title: title,
           description: description,
           isLoading: isLoading,
@@ -45,6 +44,7 @@ void main() {
           actions: actions,
           floatingActionButton: floatingActionButton,
           backgroundColor: backgroundColor,
+          child: child,
         ),
       ),
     );

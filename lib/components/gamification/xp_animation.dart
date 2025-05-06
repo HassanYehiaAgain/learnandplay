@@ -272,7 +272,7 @@ class _XpGainAnimationState extends State<XpGainAnimation> with TickerProviderSt
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          '${widget.newLevel!.title}',
+                          widget.newLevel!.title,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,

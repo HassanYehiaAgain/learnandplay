@@ -187,8 +187,8 @@ class _DragDropCategoriesGameScreenState extends State<DragDropCategoriesGameScr
     final items = _categorizedItems[category.id]!;
     
     return DragTarget<DraggableItem>(
-      onWillAccept: (_) => true,
-      onAccept: (item) => _handleItemDropped(item, category.id),
+      onWillAcceptWithDetails: (_) => true,
+      onAcceptWithDetails: (item) => _handleItemDropped(item, category.id),
       builder: (context, candidateData, rejectedData) {
         return Container(
           width: double.infinity,

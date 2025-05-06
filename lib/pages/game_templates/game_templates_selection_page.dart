@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:learn_play_level_up_flutter/components/navbar.dart';
 import 'package:learn_play_level_up_flutter/components/ui/card.dart';
 import 'package:learn_play_level_up_flutter/models/game_template_models.dart';
-import 'package:learn_play_level_up_flutter/theme/app_theme.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 

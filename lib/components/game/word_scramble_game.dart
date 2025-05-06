@@ -433,7 +433,7 @@ class _WordScrambleGameViewState extends State<WordScrambleGameView> with Ticker
                 const SizedBox(height: 4),
                 LinearProgressIndicator(
                   value: (_currentWordIndex + 1) / widget.gameData.words.length,
-                  backgroundColor: colorScheme.surfaceVariant,
+                  backgroundColor: colorScheme.surfaceContainerHighest,
                   color: colorScheme.primary,
                 ),
               ],
@@ -477,7 +477,7 @@ class _WordScrambleGameViewState extends State<WordScrambleGameView> with Ticker
     final isEmpty = letter == null;
     
     return DragTarget<int>(
-      onAccept: (letterIndex) {
+      onAcceptWithDetails: (letterIndex) {
         _dragLetterToPlaceholder(letterIndex, index);
       },
       builder: (context, candidateData, rejectedData) {

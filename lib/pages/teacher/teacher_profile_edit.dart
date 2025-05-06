@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:learn_play_level_up_flutter/services/auth_service.dart';
 import 'package:learn_play_level_up_flutter/services/firebase_service.dart';

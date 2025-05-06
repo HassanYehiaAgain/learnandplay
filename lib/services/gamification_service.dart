@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_play_level_up_flutter/models/gamification_models.dart' as gamification;
-import 'package:learn_play_level_up_flutter/models/user.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uuid/uuid.dart';
 
 class GamificationService {

@@ -48,7 +48,7 @@ class _WordSearchCreationPageState extends State<WordSearchCreationPage> {
       if (word.length > _gridSize) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Word "$word" is too long for a ${_gridSize}x${_gridSize} grid. Increase grid size or use a shorter word.'),
+            content: Text('Word "$word" is too long for a ${_gridSize}x$_gridSize grid. Increase grid size or use a shorter word.'),
             backgroundColor: Colors.red,
           ),
         );
@@ -196,7 +196,7 @@ class _WordSearchCreationPageState extends State<WordSearchCreationPage> {
             children: [
               Expanded(
                 child: Text(
-                  'Grid Size (${_gridSize}x${_gridSize})',
+                  'Grid Size (${_gridSize}x$_gridSize)',
                   style: theme.textTheme.titleMedium,
                 ),
               ),
@@ -206,7 +206,7 @@ class _WordSearchCreationPageState extends State<WordSearchCreationPage> {
                 items: [8, 10, 12, 15, 18, 20].map((size) {
                   return DropdownMenuItem<int>(
                     value: size,
-                    child: Text('${size}x${size}'),
+                    child: Text('${size}x$size'),
                   );
                 }).toList(),
                 onChanged: (value) {
@@ -219,7 +219,7 @@ class _WordSearchCreationPageState extends State<WordSearchCreationPage> {
                       if (tooLongWords.isNotEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('${tooLongWords.length} words are too long for a ${_gridSize}x${_gridSize} grid and will need to be removed'),
+                            content: Text('${tooLongWords.length} words are too long for a ${_gridSize}x$_gridSize grid and will need to be removed'),
                             backgroundColor: Colors.orange,
                           ),
                         );
@@ -441,7 +441,7 @@ class _WordSearchCreationPageState extends State<WordSearchCreationPage> {
                       Column(
                         children: [
                           Text(
-                            '${_gridSize}x${_gridSize}',
+                            '${_gridSize}x$_gridSize',
                             style: theme.textTheme.headlineMedium?.copyWith(
                               color: colorScheme.primary,
                               fontWeight: FontWeight.bold,

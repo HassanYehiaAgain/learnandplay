@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:learn_play_level_up_flutter/theme/app_theme.dart';
 import 'package:intl/intl.dart';
 
 class WeeklySchedule extends StatelessWidget {

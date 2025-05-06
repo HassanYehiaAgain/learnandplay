@@ -546,7 +546,7 @@ class _QuizShowGameCreatorState extends State<QuizShowGameCreator> {
                                 horizontal: 16,
                                 vertical: 12,
                               ),
-                              prefixIcon: Icon(
+                              prefixIcon: const Icon(
                                 Icons.star,
                                 color: Colors.amber,
                               ),
@@ -585,7 +585,7 @@ class _QuizShowGameCreatorState extends State<QuizShowGameCreator> {
                                 horizontal: 16,
                                 vertical: 12,
                               ),
-                              prefixIcon: Icon(
+                              prefixIcon: const Icon(
                                 Icons.monetization_on,
                                 color: Colors.amber,
                               ),

@@ -194,7 +194,7 @@ class _LeaderboardPageState extends State<LeaderboardPage> with SingleTickerProv
               padding: const EdgeInsets.all(8),
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceVariant,
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(

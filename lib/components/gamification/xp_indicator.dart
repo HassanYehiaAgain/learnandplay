@@ -124,7 +124,7 @@ class _XpIndicatorState extends State<XpIndicator> with SingleTickerProviderStat
                       Text(
                         '${displayXp.toString()}/${widget.nextLevel!.requiredXp} XP',
                         style: TextStyle(
-                          color: colorScheme.onBackground.withOpacity(0.7),
+                          color: colorScheme.onSurface.withOpacity(0.7),
                           fontSize: 12,
                         ),
                       ),
@@ -138,7 +138,7 @@ class _XpIndicatorState extends State<XpIndicator> with SingleTickerProviderStat
                 Container(
                   height: 12,
                   decoration: BoxDecoration(
-                    color: colorScheme.surfaceVariant,
+                    color: colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(6),
                   ),
                 ),
@@ -177,7 +177,7 @@ class _XpIndicatorState extends State<XpIndicator> with SingleTickerProviderStat
                       ),
                       child: Text(
                         widget.nextLevel!.level.toString(),
-                        style: TextStyle(
+                        style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 10,

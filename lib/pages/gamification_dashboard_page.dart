@@ -31,7 +31,7 @@ class _GamificationDashboardPageState extends State<GamificationDashboardPage> w
   late int _currentPathNodeIndex;
   
   int _selectedLeaderboardTab = 0;
-  List<String> _leaderboardCategories = ['Global', 'Math', 'Science', 'Language', 'History'];
+  final List<String> _leaderboardCategories = ['Global', 'Math', 'Science', 'Language', 'History'];
   
   @override
   void initState() {
@@ -414,7 +414,7 @@ class _GamificationDashboardPageState extends State<GamificationDashboardPage> w
           ),
           
           // Progress graph
-          ProgressGraph(
+          const ProgressGraph(
             dailyXpValues: [50, 75, 30, 90, 120, 60, 45],
             labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
             title: 'Daily XP Earnings',

@@ -275,7 +275,7 @@ class _RewardScreenState extends State<RewardScreen> with TickerProviderStateMix
                     borderRadius: BorderRadius.circular(8),
                     child: LinearProgressIndicator(
                       value: widget.score / widget.maxScore,
-                      backgroundColor: colorScheme.surfaceVariant,
+                      backgroundColor: colorScheme.surfaceContainerHighest,
                       color: _getProgressColor(colorScheme),
                       minHeight: 16,
                     ),

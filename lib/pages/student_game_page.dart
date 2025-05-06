@@ -5,7 +5,6 @@ import 'package:learn_play_level_up_flutter/components/game/word_scramble_game.d
 import 'package:learn_play_level_up_flutter/components/game/quiz_show_game.dart';
 import 'package:learn_play_level_up_flutter/components/game/word_guess_game.dart';
 import 'package:learn_play_level_up_flutter/components/game/educational_quiz_game.dart';
-import 'package:learn_play_level_up_flutter/components/ui/button.dart';
 import 'package:learn_play_level_up_flutter/models/game_template_models.dart';
 import 'package:learn_play_level_up_flutter/models/firebase_models.dart';
 import 'package:learn_play_level_up_flutter/services/gamification_service.dart';

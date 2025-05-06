@@ -563,7 +563,7 @@ class _WordGuessGameCreatorState extends State<WordGuessGameCreator> {
                                 horizontal: 16,
                                 vertical: 12,
                               ),
-                              prefixIcon: Icon(
+                              prefixIcon: const Icon(
                                 Icons.star,
                                 color: Colors.amber,
                               ),
@@ -602,7 +602,7 @@ class _WordGuessGameCreatorState extends State<WordGuessGameCreator> {
                                 horizontal: 16,
                                 vertical: 12,
                               ),
-                              prefixIcon: Icon(
+                              prefixIcon: const Icon(
                                 Icons.monetization_on,
                                 color: Colors.amber,
                               ),

@@ -91,21 +91,21 @@ class SkeletonCard extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
+      child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const SkeletonLoader(
+              SkeletonLoader(
                 width: 50,
                 height: 50,
                 borderRadius: 25,
               ),
-              const SizedBox(width: 16),
+              SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     SkeletonLoader(height: 20),
                     SizedBox(height: 8),
                     SkeletonLoader(
@@ -117,8 +117,8 @@ class SkeletonCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          const Expanded(
+          SizedBox(height: 16),
+          Expanded(
             child: SkeletonLoaderText(
               lines: 3,
             ),

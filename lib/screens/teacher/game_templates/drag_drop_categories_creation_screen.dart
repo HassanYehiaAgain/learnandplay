@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:learn_play_level_up_flutter/models/game_template_models.dart';
 import 'package:learn_play_level_up_flutter/models/game_models.dart' as game_models;
 import 'package:learn_play_level_up_flutter/services/game_templates_provider.dart';
-import 'package:learn_play_level_up_flutter/widgets/common/form_fields.dart';
 import 'package:learn_play_level_up_flutter/widgets/common/image_upload.dart';
 
 class DragDropCategoriesCreationScreen extends StatefulWidget {

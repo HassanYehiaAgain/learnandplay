@@ -19,7 +19,7 @@ class _SubjectManagementPageState extends State<SubjectManagementPage> {
   bool _isLoading = true;
   String? _errorMessage;
   List<Subject> _subjects = [];
-  Map<String, FirebaseUser> _userCache = {};
+  final Map<String, FirebaseUser> _userCache = {};
   
   @override
   void initState() {
@@ -94,10 +94,10 @@ class _SubjectManagementPageState extends State<SubjectManagementPage> {
   }
 
   void _showCreateSubjectDialog(BuildContext context, String teacherId) {
-    final _nameController = TextEditingController();
-    final _descController = TextEditingController();
-    int _gradeYear = 1;
-    bool _isSaving = false;
+    final nameController = TextEditingController();
+    final descController = TextEditingController();
+    int gradeYear = 1;
+    bool isSaving = false;
 
     showDialog(
       context: context,
@@ -110,24 +110,24 @@ class _SubjectManagementPageState extends State<SubjectManagementPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextField(
-                    controller: _nameController,
+                    controller: nameController,
                     decoration: const InputDecoration(labelText: 'Subject Name'),
                   ),
                   const SizedBox(height: 12),
                   TextField(
-                    controller: _descController,
+                    controller: descController,
                     decoration: const InputDecoration(labelText: 'Description'),
                   ),
                   const SizedBox(height: 12),
                   DropdownButtonFormField<int>(
-                    value: _gradeYear,
+                    value: gradeYear,
                     decoration: const InputDecoration(labelText: 'Grade Year'),
                     items: List.generate(13, (i) => i).map((grade) => DropdownMenuItem(
                       value: grade,
                       child: Text(grade == 0 ? 'Kindergarten' : 'Grade $grade'),
                     )).toList(),
                     onChanged: (val) {
-                      if (val != null) setState(() => _gradeYear = val);
+                      if (val != null) setState(() => gradeYear = val);
                     },
                   ),
                 ],
@@ -138,25 +138,25 @@ class _SubjectManagementPageState extends State<SubjectManagementPage> {
                   child: const Text('Cancel'),
                 ),
                 ElevatedButton(
-                  onPressed: _isSaving ? null : () async {
-                    if (_nameController.text.trim().isEmpty) return;
-                    setState(() => _isSaving = true);
+                  onPressed: isSaving ? null : () async {
+                    if (nameController.text.trim().isEmpty) return;
+                    setState(() => isSaving = true);
                     final firebaseService = Provider.of<FirebaseService>(context, listen: false);
                     final subject = Subject(
                       id: '',
-                      name: _nameController.text.trim(),
-                      description: _descController.text.trim(),
-                      gradeYear: _gradeYear,
+                      name: nameController.text.trim(),
+                      description: descController.text.trim(),
+                      gradeYear: gradeYear,
                       teacherId: teacherId,
                       studentIds: [],
                       createdAt: DateTime.now(),
                     );
                     await firebaseService.createSubject(subject);
-                    setState(() => _isSaving = false);
+                    setState(() => isSaving = false);
                     Navigator.of(context).pop();
                     _loadData();
                   },
-                  child: _isSaving ? const CircularProgressIndicator() : const Text('Create'),
+                  child: isSaving ? const CircularProgressIndicator() : const Text('Create'),
                 ),
               ],
             );

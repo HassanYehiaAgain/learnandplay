@@ -37,7 +37,7 @@ class _FlashcardGameCreationPageState extends State<FlashcardGameCreationPage> {
   bool _showProgress = true;
   bool _showStatistics = true;
   bool _autoAdvance = false;
-  String _flipAnimationStyle = 'flip';
+  final String _flipAnimationStyle = 'flip';
   
   // File upload
   String? _frontImageUrl;

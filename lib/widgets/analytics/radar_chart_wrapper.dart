@@ -43,10 +43,10 @@ class MasteryRadarChart extends StatelessWidget {
         painter: RadarChartPainter(
           subjects: subjects,
           color: color,
-          backgroundColor: colorScheme.surfaceVariant.withOpacity(0.2),
+          backgroundColor: colorScheme.surfaceContainerHighest.withOpacity(0.2),
           gridColor: colorScheme.outline.withOpacity(0.3),
         ),
-        child: Center(),
+        child: const Center(),
       ),
     );
   }
@@ -150,7 +150,7 @@ class RadarChartPainter extends CustomPainter {
       
       final textSpan = TextSpan(
         text: subjects[i].subjectName.length > 8 
-            ? subjects[i].subjectName.substring(0, 8) + '...'
+            ? '${subjects[i].subjectName.substring(0, 8)}...'
             : subjects[i].subjectName,
         style: textStyle,
       );

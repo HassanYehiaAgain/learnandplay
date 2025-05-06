@@ -437,12 +437,12 @@ class _FillInTheBlanksGameCreatorState extends State<FillInTheBlanksGameCreator>
                       });
                     },
                   ),
-                  Row(
+                  const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Easy'),
-                      const Text('Medium'),
-                      const Text('Hard'),
+                      Text('Easy'),
+                      Text('Medium'),
+                      Text('Hard'),
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -678,7 +678,7 @@ class _FillInTheBlanksGameCreatorState extends State<FillInTheBlanksGameCreator>
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: colorScheme.surfaceVariant.withOpacity(0.3),
+                      color: colorScheme.surfaceContainerHighest.withOpacity(0.3),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Column(

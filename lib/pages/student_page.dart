@@ -40,7 +40,7 @@ class _StudentPageState extends State<StudentPage> with SingleTickerProviderStat
   List<firebase_models.EducationalGame> _assignedGames = [];
   List<firebase_models.GameProgress> _gameProgress = [];
   List<firebase_models.Subject> _subjects = [];
-  Map<String, firebase_models.FirebaseUser> _teachersMap = {};
+  final Map<String, firebase_models.FirebaseUser> _teachersMap = {};
   
   // Filtered games
   String _selectedFilter = 'all'; // 'all', 'dueToday', 'overdue', 'completed', 'tutorial'
@@ -1007,7 +1007,7 @@ class _StudentPageState extends State<StudentPage> with SingleTickerProviderStat
               const SizedBox(height: 12),
               if (isStarted) ...[
                 LinearProgressIndicator(
-                  value: (progress?.completionPercentage ?? 0) / 100,
+                  value: (progress.completionPercentage ?? 0) / 100,
                   backgroundColor: colorScheme.primaryContainer.withOpacity(0.2),
                   color: statusColor,
                   borderRadius: BorderRadius.circular(10),

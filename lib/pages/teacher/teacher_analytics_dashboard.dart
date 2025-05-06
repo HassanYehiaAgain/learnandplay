@@ -33,7 +33,7 @@ class _TeacherAnalyticsDashboardState extends State<TeacherAnalyticsDashboard> w
   List<ClassPerformance> _classPerformance = [];
   List<GameEffectiveness> _gameEffectiveness = [];
   bool _isLoading = true;
-  bool _isExporting = false;
+  final bool _isExporting = false;
   String _selectedTimeRange = 'All Time';
   String? _selectedSubject;
   String? _selectedClass;
@@ -764,8 +764,8 @@ class _TeacherAnalyticsDashboardState extends State<TeacherAnalyticsDashboard> w
                     border: OutlineInputBorder(),
                     contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   ),
-                  items: [
-                    const DropdownMenuItem(value: null, child: Text('All Subjects')),
+                  items: const [
+                    DropdownMenuItem(value: null, child: Text('All Subjects')),
                     // Add subject items here
                   ],
                   value: _selectedSubject,
@@ -1102,8 +1102,8 @@ class _TeacherAnalyticsDashboardState extends State<TeacherAnalyticsDashboard> w
                     border: OutlineInputBorder(),
                     contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   ),
-                  items: [
-                    const DropdownMenuItem(value: null, child: Text('All Subjects')),
+                  items: const [
+                    DropdownMenuItem(value: null, child: Text('All Subjects')),
                     // Add subject items here
                   ],
                   value: _selectedSubject,

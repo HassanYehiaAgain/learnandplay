@@ -255,7 +255,7 @@ class StoreItem extends StatelessWidget {
                   height: 120,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: colorScheme.surfaceVariant,
+                    color: colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: ClipRRect(
@@ -435,7 +435,7 @@ class PurchaseConfirmationDialog extends StatelessWidget {
             height: 120,
             width: double.infinity,
             decoration: BoxDecoration(
-              color: colorScheme.surfaceVariant,
+              color: colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(8),
             ),
             child: ClipRRect(
@@ -519,8 +519,8 @@ class PurchaseConfirmationDialog extends StatelessWidget {
           ),
           
           if (!canAfford)
-            Padding(
-              padding: const EdgeInsets.only(top: 16.0),
+            const Padding(
+              padding: EdgeInsets.only(top: 16.0),
               child: Text(
                 'You don\'t have enough coins!',
                 style: TextStyle(

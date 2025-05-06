@@ -557,7 +557,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   child: Center(
                     child: i < _currentStep
-                        ? Icon(
+                        ? const Icon(
                             Icons.check,
                             color: Colors.white,
                             size: 20,

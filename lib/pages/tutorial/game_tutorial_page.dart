@@ -103,7 +103,7 @@ class _GameTutorialPageState extends State<GameTutorialPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.warning_amber_rounded,
               size: 64,
               color: Colors.amber,
@@ -114,7 +114,7 @@ class _GameTutorialPageState extends State<GameTutorialPage> {
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 8),
-            Text(
+            const Text(
               'No tutorial is available for this game type.',
               textAlign: TextAlign.center,
             ),

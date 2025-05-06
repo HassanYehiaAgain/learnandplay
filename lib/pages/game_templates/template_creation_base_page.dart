@@ -321,25 +321,25 @@ class _TemplateCreationBasePageState extends State<TemplateCreationBasePage> {
   Widget build(BuildContext context) {
     // Debug: Show loading indicator if still loading
     if (_isSaving) {
-      return Scaffold(
+      return const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       );
     }
     // Debug: Show error if teacher/user is missing
     if (_teacher == null) {
-      return Scaffold(
+      return const Scaffold(
         body: Center(child: Text('Error: No teacher user loaded. Please sign in again.', style: TextStyle(color: Colors.red))),
       );
     }
     // Debug: Show error if no subjects
     if (_teacherSubjects.isEmpty) {
-      return Scaffold(
+      return const Scaffold(
         body: Center(child: Text('Error: No subjects found for this teacher. Please add a subject first.', style: TextStyle(color: Colors.red))),
       );
     }
     // Debug: Show error if no grade years
     if (_teachingGradeYears.isEmpty) {
-      return Scaffold(
+      return const Scaffold(
         body: Center(child: Text('Error: No grade years found for this teacher. Please set your teaching grade years in your profile.', style: TextStyle(color: Colors.red))),
       );
     }
@@ -352,9 +352,9 @@ class _TemplateCreationBasePageState extends State<TemplateCreationBasePage> {
         _buildSettingsStep,
         _buildReviewStep,
       ][_currentStep]();
-    } catch (e, stack) {
+    } catch (e) {
       stepContent = Center(
-        child: Text('Error rendering step: $e', style: TextStyle(color: Colors.red)),
+        child: Text('Error rendering step: $e', style: const TextStyle(color: Colors.red)),
       );
     }
     
@@ -536,7 +536,7 @@ class _TemplateCreationBasePageState extends State<TemplateCreationBasePage> {
       ),
       child: Center(
         child: isCompleted
-            ? Icon(
+            ? const Icon(
                 Icons.check,
                 color: Colors.white,
                 size: 18,

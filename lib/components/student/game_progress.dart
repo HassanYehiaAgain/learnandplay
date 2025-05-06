@@ -182,10 +182,10 @@ class GameProgress extends StatelessWidget {
                     color: Colors.white.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
+                      Text(
                         'Start',
                         style: TextStyle(
                           fontFamily: 'PixelifySans',
@@ -194,8 +194,8 @@ class GameProgress extends StatelessWidget {
                           color: Colors.white,
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      const Icon(
+                      SizedBox(width: 8),
+                      Icon(
                         Icons.play_arrow_rounded,
                         color: Colors.white,
                         size: 16,

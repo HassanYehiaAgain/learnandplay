@@ -18,7 +18,6 @@ import 'package:learn_play_level_up_flutter/pages/teacher/teacher_analytics_dash
 import 'package:learn_play_level_up_flutter/pages/student/student_analytics_page.dart';
 import 'package:learn_play_level_up_flutter/pages/game_templates/game_templates_selection_page.dart';
 import 'package:learn_play_level_up_flutter/pages/game_templates/word_scramble_creation_page.dart';
-import 'package:learn_play_level_up_flutter/pages/game_templates/word_search_creation_page.dart';
 import 'package:learn_play_level_up_flutter/pages/game_templates/template_creation_base_page.dart';
 import 'package:learn_play_level_up_flutter/services/auth_middleware.dart';
 import 'package:learn_play_level_up_flutter/models/game_template_models.dart';

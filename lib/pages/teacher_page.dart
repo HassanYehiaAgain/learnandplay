@@ -35,8 +35,8 @@ class _TeacherPageState extends State<TeacherPage> with SingleTickerProviderStat
   // Data collections
   List<EducationalGame> _games = [];
   List<Subject> _subjects = [];
-  Map<String, FirebaseUser> _studentsMap = {};
-  Map<String, List<GameProgress>> _gameProgressMap = {};
+  final Map<String, FirebaseUser> _studentsMap = {};
+  final Map<String, List<GameProgress>> _gameProgressMap = {};
   
   // Filter states
   String? _selectedSubjectId;
@@ -50,7 +50,7 @@ class _TeacherPageState extends State<TeacherPage> with SingleTickerProviderStat
   double _averageScore = 0;
   
   // Resources quick access panel state
-  bool _isResourcesPanelExpanded = false;
+  final bool _isResourcesPanelExpanded = false;
   
   @override
   void initState() {
@@ -207,7 +207,7 @@ class _TeacherPageState extends State<TeacherPage> with SingleTickerProviderStat
           ),
           Expanded(
             child: _isLoading
-                ? Center(child: CircularProgressIndicator())
+                ? const Center(child: CircularProgressIndicator())
                 : _errorMessage != null
                 ? Center(
                     child: Column(

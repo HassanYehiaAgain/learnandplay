@@ -1,6 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
 
 /// A class representing analytics data for teachers
 class TeacherAnalyticsSummary {

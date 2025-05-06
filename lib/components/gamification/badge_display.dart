@@ -36,7 +36,7 @@ class BadgeDisplay extends StatelessWidget {
               shape: BoxShape.circle,
               color: isEarned
                   ? colorScheme.surface
-                  : colorScheme.surfaceVariant.withOpacity(0.5),
+                  : colorScheme.surfaceContainerHighest.withOpacity(0.5),
               boxShadow: isEarned
                   ? [
                       BoxShadow(
@@ -185,8 +185,8 @@ class BadgeGrid extends StatelessWidget {
               style: TextStyle(
                 fontWeight: isEarned ? FontWeight.bold : FontWeight.normal,
                 color: isEarned 
-                  ? Theme.of(context).colorScheme.onBackground
-                  : Theme.of(context).colorScheme.onBackground.withOpacity(0.5),
+                  ? Theme.of(context).colorScheme.onSurface
+                  : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                 fontSize: 12,
               ),
               maxLines: 1,

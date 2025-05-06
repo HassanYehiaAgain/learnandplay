@@ -169,7 +169,7 @@ class PerformanceChart extends StatelessWidget {
                 maxY: maxValue,
                 lineTouchData: LineTouchData(
                   touchTooltipData: LineTouchTooltipData(
-                    tooltipBgColor: colorScheme.surfaceVariant,
+                    tooltipBgColor: colorScheme.surfaceContainerHighest,
                     getTooltipItems: (touchedSpots) {
                       return touchedSpots.map((LineBarSpot touchedSpot) {
                         final index = touchedSpot.x.toInt();

@@ -122,7 +122,7 @@ class StudentProgressCard extends StatelessWidget {
                                 ? student.gamesCompleted / student.gamesAssigned 
                                 : 0,
                             minHeight: 8,
-                            backgroundColor: colorScheme.surfaceVariant,
+                            backgroundColor: colorScheme.surfaceContainerHighest,
                             color: _getColorForCompletion(student.completionRate),
                           ),
                         ),

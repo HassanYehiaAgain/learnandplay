@@ -217,11 +217,11 @@ class _StudentPageState extends State<StudentPage> {
               Container(
                 width: 64,
                 height: 64,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   gradient: AppGradients.purpleToPink,
                   shape: BoxShape.circle,
                 ),
-                child: Center(
+                child: const Center(
                   child: Text(
                     'JS',
                     style: TextStyle(

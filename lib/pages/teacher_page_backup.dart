@@ -69,7 +69,7 @@ class _TeacherPageState extends State<TeacherPage> with SingleTickerProviderStat
           const Navbar(isAuthenticated: true, userRole: 'teacher'),
           Expanded(
             child: _isLoading
-                ? Center(child: CircularProgressIndicator())
+                ? const Center(child: CircularProgressIndicator())
                 : _buildDashboardContent(context, isSmallScreen),
           ),
         ],

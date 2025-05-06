@@ -309,7 +309,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   // XP info
                   Row(
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.star,
                         size: 16,
                         color: Colors.amber,
@@ -616,8 +616,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
                             fontSize: 11,
                             fontWeight: isEarned ? FontWeight.bold : FontWeight.normal,
                             color: isEarned
-                                ? theme.colorScheme.onBackground
-                                : theme.colorScheme.onBackground.withOpacity(0.5),
+                                ? theme.colorScheme.onSurface
+                                : theme.colorScheme.onSurface.withOpacity(0.5),
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
